@@ -18,10 +18,16 @@ const Dashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 relative overflow-hidden">
+    // <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 relative overflow-hidden">
+    <div
+      className="flex min-h-screen relative overflow-hidden bg-cover bg-center"
+      style={{
+        backgroundImage: "url('/images/dashboard-bg.jpg')",
+      }}
+    >
       {/* 사이드패널 */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform  ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-64"
         } transition-transform duration-300 ease-in-out`}
       >
@@ -70,11 +76,10 @@ const Dashboard = () => {
       </div>
 
       {/* 메인 */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 p-4">
         {/* 헤더 */}
-        <header className="backdrop-blur-xl bg-white/5 border-b border-white/10 px-6 py-4 flex items-center justify-between">
+        <header className="backdrop-blur-[5px] bg-white/10 border border-white/20 rounded-2xl px-6 py-4 flex items-center justify-between shadow-lg">
           <div className="flex items-center space-x-4">
-            {/* 드로어 열기/닫기 버튼 */}
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
