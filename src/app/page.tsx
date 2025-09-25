@@ -1,22 +1,132 @@
 "use client";
 
-import Drawer from "@/components/ui/Drawer";
-import Header from "@/components/ui/Header";
-import PostList from "@/components/PostList";
+import React, { useState, useEffect } from "react";
 
-export default function HomePage() {
+import {
+  Leaf,
+  AlertTriangle,
+  Building2,
+  Menu,
+  X,
+  DollarSign,
+  Target,
+  Globe,
+} from "lucide-react";
+
+const Dashboard = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState("6months");
+
   return (
-    <div className="flex h-screen bg-gradient-to-tr from-purple-400 via-blue-400 to-indigo-400">
-      <Drawer />
-
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <main className="p-6 overflow-auto">
-          <div className="space-y-6">
-            <PostList />
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-800 relative overflow-hidden">
+      {/* 사이드패널 */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
+          isDrawerOpen ? "translate-x-0" : "-translate-x-64"
+        } transition-transform duration-300 ease-in-out`}
+      >
+        <div className="flex flex-col h-full backdrop-blur-xl bg-white/10 border-r border-white/20 shadow-2xl">
+          <div className="flex items-center justify-between p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+                <Leaf className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-xl font-bold text-white">Dashboard</h1>
+            </div>
+            <button
+              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              {isDrawerOpen ? (
+                <X className="w-5 h-5 text-white" />
+              ) : (
+                <Menu className="w-5 h-5 text-white" />
+              )}
+            </button>
           </div>
-        </main>
+
+          <nav className="flex-1 px-4 space-y-2">
+            {[
+              { icon: Globe, label: "menu1", active: true },
+              { icon: Building2, label: "menu2" },
+              { icon: DollarSign, label: "menu3" },
+              { icon: Target, label: "menu4" },
+              { icon: AlertTriangle, label: "menu5" },
+            ].map((item, index) => (
+              <button
+                key={index}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  item.active
+                    ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20"
+                    : "text-gray-300 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
       </div>
+
+      {/* 메인 */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* 헤더 */}
+        <header className="backdrop-blur-xl bg-white/5 border-b border-white/10 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            {/* 드로어 열기/닫기 버튼 */}
+            <button
+              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              {isDrawerOpen ? (
+                <X className="w-6 h-6 text-white" />
+              ) : (
+                <Menu className="w-6 h-6 text-white" />
+              )}
+            </button>
+
+            <div>
+              <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+              <p className="text-gray-300">대시보드</p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="1month" className="bg-gray-800">
+                1
+              </option>
+              <option value="3months" className="bg-gray-800">
+                2
+              </option>
+              <option value="6months" className="bg-gray-800">
+                3
+              </option>
+              <option value="1year" className="bg-gray-800">
+                4
+              </option>
+            </select>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center">
+              <span className="text-white font-medium">A</span>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      {/* 반응형 */}
+      {isDrawerOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsDrawerOpen(false)}
+        ></div>
+      )}
     </div>
   );
-}
+};
+
+export default Dashboard;
