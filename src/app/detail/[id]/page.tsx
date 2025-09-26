@@ -95,6 +95,29 @@ export default function CompanyDetailPage() {
       .text((d) => `${d.data.source}: ${d.data.value}`);
   }, [company]);
 
+  const companyPosts = posts
+    .filter((p) => p.resourceUid === company?.id)
+    .sort((a, b) => (a.dateTime < b.dateTime ? 1 : -1));
+
+  const selectedReport =
+    companyPosts.find((p) => p.id === selectedReportId) || null;
+
+  const handleExport = () => {
+    if (!selectedReport) return;
+
+    const blob = new Blob([selectedReport.content], {
+      type: "text/plain;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${selectedReport.title}.txt`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   if (!company) return <div>Loading...</div>;
 
   return (
@@ -155,10 +178,48 @@ export default function CompanyDetailPage() {
                   tCO₂
                 </p>
               </div>
+
+              {/* 추가 정보 */}
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  최근 배출월
+                </h4>
+                <p className="text-white text-lg font-semibold">
+                  {company.emissions.sort((a, b) =>
+                    b.yearMonth.localeCompare(a.yearMonth)
+                  )[0]?.yearMonth || "N/A"}
+                </p>
+              </div>
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  주요 배출원
+                </h4>
+                <p className="text-pink-400 text-lg font-semibold">
+                  {company.emissions.sort(
+                    (a, b) => b.emissions - a.emissions
+                  )[0]?.source || "N/A"}
+                </p>
+              </div>
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  배출원 수
+                </h4>
+                <p className="text-yellow-400 text-lg font-semibold">
+                  {new Set(company.emissions.map((e) => e.source)).size}
+                </p>
+              </div>
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  리포트 수
+                </h4>
+                <p className="text-teal-400 text-lg font-semibold">
+                  {posts.filter((p) => p.resourceUid === company.id).length}
+                </p>
+              </div>
             </div>
 
             {/* 최근 리포트 */}
-            <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80">
+            <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80 max-h-[400px] overflow-auto">
               <h4 className="text-white font-semibold">최근 리포트</h4>
               {posts
                 .filter((p) => p.resourceUid === company.id)
@@ -189,26 +250,17 @@ export default function CompanyDetailPage() {
               )}
             </div>
 
-            {/* 주요 배출원 */}
-            <div className="flex flex-col gap-2 text-white/80">
-              <p>
-                주요 배출원:{" "}
-                {company.emissions.sort((a, b) => b.emissions - a.emissions)[0]
-                  ?.source || "N/A"}
-              </p>
-              <p>
-                최근 배출월:{" "}
-                {
-                  company.emissions.sort((a, b) =>
-                    b.yearMonth.localeCompare(a.yearMonth)
-                  )[0]?.yearMonth
-                }
-              </p>
-            </div>
-
             {/* 액션 버튼 */}
-            <div className="flex gap-2 mt-4">
-              <button className="flex-1 bg-green-500/70 hover:bg-green-400 transition rounded-lg py-2 text-white font-semibold">
+            <div className="mt-auto flex gap-2">
+              <button
+                className={`flex-1 py-2 rounded-lg font-semibold text-white transition ${
+                  selectedReport
+                    ? "bg-green-500/70 hover:bg-green-400 cursor-pointer"
+                    : "bg-black/20 cursor-not-allowed"
+                }`}
+                disabled={!selectedReport}
+                onClick={handleExport}
+              >
                 Export Report
               </button>
             </div>
