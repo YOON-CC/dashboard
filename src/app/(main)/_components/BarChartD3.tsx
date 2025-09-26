@@ -6,7 +6,7 @@ import { Company } from "@/lib/api";
 
 interface BarChartD3Props {
   companies: Company[];
-  selectedCompanyId: string | null;
+  selectedCompanyId?: string | null;
 }
 
 const BarChartD3: React.FC<BarChartD3Props> = ({
