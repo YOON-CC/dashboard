@@ -33,8 +33,11 @@ import {
   Post,
 } from "@/lib/api";
 import LineChartD3 from "./dashboard/_components/BarChartD3";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
+  const router = useRouter();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
 
@@ -58,15 +61,6 @@ const Dashboard = () => {
     }));
     return { totalEmissions, monthlyData };
   };
-
-  const totalEmissionsAll = useMemo(
-    () =>
-      companies.reduce(
-        (sum, c) => sum + parseCompanyEmissions(c).totalEmissions,
-        0
-      ),
-    []
-  );
 
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     null
@@ -497,7 +491,13 @@ const Dashboard = () => {
               </div>
 
               {/* 상세 정보 카드 */}
-              <div className="bg-gradient-to-br from-purple-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
+              <div
+                className="bg-gradient-to-br from-purple-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden"
+                onClick={() =>
+                  selectedCompanyId &&
+                  router.push(`/detail/${selectedCompanyId}`)
+                }
+              >
                 <div className="absolute top-0 left-0 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <Building2 className="w-5 h-5 text-purple-300" />
