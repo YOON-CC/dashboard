@@ -1,0 +1,110 @@
+"use client";
+
+import { Leaf, X, Menu, Globe, Building2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+interface Company {
+  id: string;
+  name: string;
+}
+
+interface SidePanelProps {
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: (open: boolean) => void;
+  showDetailDropdown: boolean;
+  setShowDetailDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+  companies: Company[];
+}
+
+const SidePanel = ({
+  isDrawerOpen,
+  setIsDrawerOpen,
+  showDetailDropdown,
+  setShowDetailDropdown,
+  companies,
+}: SidePanelProps) => {
+  const router = useRouter();
+
+  return (
+    <div
+      className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
+        isDrawerOpen ? "translate-x-0" : "-translate-x-64"
+      } transition-transform duration-300 ease-in-out`}
+    >
+      <div className="flex flex-col h-full bg-black border-r border-white/20 shadow-2xl rounded-r-2xl">
+        {/* 상단 헤더 */}
+        <div className="flex items-center justify-between p-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center shadow-md">
+              <Leaf className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+          </div>
+          <button
+            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+            className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            {isDrawerOpen ? (
+              <X className="w-5 h-5 text-white" />
+            ) : (
+              <Menu className="w-5 h-5 text-white" />
+            )}
+          </button>
+        </div>
+
+        {/* 네비게이션 */}
+        <nav className="flex-1 px-4 space-y-2 relative">
+          <button
+            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
+            onClick={() => router.push("/")}
+          >
+            <Globe className="w-5 h-5" />
+            <span>Home</span>
+          </button>
+
+          {/* Detail Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowDetailDropdown((prev) => !prev)}
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
+              ${
+                showDetailDropdown
+                  ? "bg-gradient-to-r from-purple-500/40 to-blue-500/40 text-white border border-white/20 shadow-inner"
+                  : "text-gray-300 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              <Building2 className="w-5 h-5" />
+              <span>Detail</span>
+              <span
+                className={`ml-auto transition-transform duration-200 ${
+                  showDetailDropdown ? "rotate-180" : ""
+                }`}
+              >
+                ▼
+              </span>
+            </button>
+
+            {showDetailDropdown && (
+              <div className="absolute left-0 top-full mt-1 w-full bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg z-50">
+                {companies.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => {
+                      router.push(`/detail/${c.id}`);
+                      setShowDetailDropdown(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-white/10 hover:text-white text-gray-300 rounded-xl transition-colors"
+                  >
+                    {c.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+};
+
+export default SidePanel;
