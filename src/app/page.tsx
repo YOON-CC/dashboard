@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Leaf,
   AlertTriangle,
@@ -15,6 +15,7 @@ import {
   Calendar,
 } from "lucide-react";
 import {
+  companies,
   Company,
   Country,
   fetchCompanies,
@@ -27,14 +28,107 @@ const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
 
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  useEffect(() => {
-    fetchCompanies().then(setCompanies);
-    fetchCountries().then(setCountries);
-    fetchPosts().then(setPosts);
-  }, []);
+  // const [companies, setCompanies] = useState<Company[]>([]);
+  // const [countries, setCountries] = useState<Country[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
+  // useEffect(() => {
+  //   fetchCompanies().then(setCompanies);
+  //   fetchCountries().then(setCountries);
+  //   fetchPosts().then(setPosts);
+  // }, []);
+
+  const companies = [
+    {
+      id: "c1",
+      name: "Acme Corp",
+      country: "US",
+      emissions: [
+        {
+          yearMonth: "2024-01",
+          source: "gasoline",
+          emissions: 120,
+        },
+        {
+          yearMonth: "2024-02",
+          source: "diesel",
+          emissions: 110,
+        },
+        {
+          yearMonth: "2024-03",
+          source: "lpg",
+          emissions: 95,
+        },
+      ],
+    },
+    {
+      id: "c2",
+      name: "Globex",
+      country: "DE",
+      emissions: [
+        {
+          yearMonth: "2024-01",
+          source: "diesel",
+          emissions: 80,
+        },
+        {
+          yearMonth: "2024-02",
+          source: "gasoline",
+          emissions: 105,
+        },
+        {
+          yearMonth: "2024-03",
+          source: "lpg",
+          emissions: 120,
+        },
+      ],
+    },
+  ];
+
+  const countries = [
+    {
+      code: "US",
+      name: "United States",
+    },
+    {
+      code: "DE",
+      name: "Germany",
+    },
+    {
+      code: "KR",
+      name: "Korea",
+    },
+  ];
+
+  const posts = [
+    {
+      id: "p1",
+      title: "Sustainability Report",
+      resourceUid: "c1",
+      dateTime: "2024-02",
+      content: "Quarterly CO2 update",
+    },
+  ];
+
+  const parseCompanyEmissions = (company: (typeof companies)[0]) => {
+    const totalEmissions = company.emissions.reduce(
+      (sum, e) => sum + e.emissions,
+      0
+    );
+    const monthlyData = company.emissions.map((e) => ({
+      month: e.yearMonth,
+      value: e.emissions,
+    }));
+    return { totalEmissions, monthlyData };
+  };
+
+  const totalEmissionsAll = useMemo(
+    () =>
+      companies.reduce(
+        (sum, c) => sum + parseCompanyEmissions(c).totalEmissions,
+        0
+      ),
+    []
+  );
 
   return (
     <div
@@ -44,7 +138,7 @@ const Dashboard = () => {
       }}
     >
       {/* 사이드패널 */}
-      <div className="bg-amber-400">
+      {/* <div className="bg-amber-400">
         <h2>Companies</h2>
         <pre>{JSON.stringify(companies, null, 2)}</pre>
 
@@ -53,7 +147,7 @@ const Dashboard = () => {
 
         <h2>Posts</h2>
         <pre>{JSON.stringify(posts, null, 2)}</pre>
-      </div>
+      </div> */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-64"
@@ -154,6 +248,7 @@ const Dashboard = () => {
         <main className="flex-1 mt-6 flex flex-col backdrop-blur-[8px] bg-black/30 border border-white/20 rounded-3xl p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 왼족 */}
+
             <div className="lg:col-span-2 space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
@@ -163,58 +258,53 @@ const Dashboard = () => {
                     </div>
                     <span className="text-white/70 text-sm">...</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">1472</h3>
-                  <p className="text-white/70 text-sm mb-2">content</p>
+                  <h3 className="text-2xl font-bold text-white mb-1">
+                    전체 배출량
+                  </h3>
+                  <p className="text-white/70 text-sm mb-2">
+                    {totalEmissionsAll} tCO2
+                  </p>
                   <div className="flex items-center text-green-300 text-xs">
                     <TrendingUp className="w-3 h-3 mr-1" />
                     +2.3%
                   </div>
                 </div>
-
-                <div className="bg-gradient-to-br from-green-500/30 to-green-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-white/20 rounded-full p-3">
-                      <Calendar className="w-6 h-6 text-white" />
+                {companies.map((company) => {
+                  const { totalEmissions, monthlyData } =
+                    parseCompanyEmissions(company);
+                  return (
+                    <div
+                      key={company.id}
+                      className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="bg-white/20 rounded-full p-3">
+                          <Building2 className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-white/70 text-sm">
+                          {company.country}
+                        </span>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-1">
+                        {company.name}
+                      </h3>
+                      <p className="text-white/70 text-sm mb-2">
+                        총 배출량: {totalEmissions} tCO2
+                      </p>
+                      <div className="flex flex-col space-y-1">
+                        {monthlyData.map((m) => (
+                          <div
+                            key={m.month}
+                            className="flex justify-between text-white/70 text-xs"
+                          >
+                            <span>{m.month}</span>
+                            <span>{m.value} tCO2</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <span className="text-white/70 text-sm">...</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">1432</h3>
-                  <p className="text-white/70 text-sm mb-2">content</p>
-                  <div className="flex items-center text-green-300 text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    +2.0%
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-purple-500/30 to-purple-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-white/20 rounded-full p-3">
-                      <Users className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-white/70 text-sm">...</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">6432</h3>
-                  <p className="text-white/70 text-sm mb-2">content</p>
-                  <div className="flex items-center text-red-300 text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1 rotate-180" />
-                    -2.6%
-                  </div>
-                </div>
-
-                <div className="bg-gradient-to-br from-blue-600/30 to-blue-700/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-white/20 rounded-full p-3">
-                      <AlertTriangle className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-white/70 text-sm">...</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">5472</h3>
-                  <p className="text-white/70 text-sm mb-2">content</p>
-                  <div className="flex items-center text-green-300 text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    +3.4%
-                  </div>
-                </div>
+                  );
+                })}
               </div>
 
               {/* 왼쪽 하단 */}
@@ -270,7 +360,7 @@ const Dashboard = () => {
               </div>
 
               {/* 왼쪽 하단 */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
+              {/* <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
                 <h3 className="text-xl font-semibold text-white mb-4">
                   content
                 </h3>
@@ -292,13 +382,13 @@ const Dashboard = () => {
                     <span className="text-white/70 text-sm">Solved</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* 오른쪽 -1 */}
             <div className="space-y-6">
               {/* Calendar */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
+              {/* <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-white">content</h3>
                   <span className="text-white/70 text-sm">content</span>
@@ -336,7 +426,7 @@ const Dashboard = () => {
                     );
                   })}
                 </div>
-              </div>
+              </div> */}
 
               {/* 오른쪽 -2 */}
               <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
