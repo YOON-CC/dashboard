@@ -15,6 +15,15 @@ import {
   Calendar,
 } from "lucide-react";
 import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+import {
   companies,
   Company,
   Country,
@@ -435,46 +444,58 @@ const Dashboard = () => {
               {/* 오른쪽 -2 */}
               <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
                 <h3 className="text-lg font-semibold text-white mb-4">
-                  content
+                  월별 배출량
                 </h3>
 
-                <div className="relative h-32 mb-4">
-                  <svg className="w-full h-full" viewBox="0 0 200 80">
-                    <path
-                      d="M0,60 Q50,20 100,40 T200,30"
-                      stroke="#60a5fa"
-                      strokeWidth="3"
-                      fill="none"
-                      className="drop-shadow-lg"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="gradient"
-                        x1="0%"
-                        y1="0%"
-                        x2="0%"
-                        y2="100%"
-                      >
-                        <stop
-                          offset="0%"
-                          stopColor="#60a5fa"
-                          stopOpacity="0.3"
-                        />
-                        <stop
-                          offset="100%"
-                          stopColor="#60a5fa"
-                          stopOpacity="0"
-                        />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M0,60 Q50,20 100,40 T200,30 L200,80 L0,80 Z"
-                      fill="url(#gradient)"
-                    />
-                  </svg>
-                  <div className="absolute top-4 left-4 bg-blue-500/30 backdrop-blur-sm rounded-full px-3 py-1">
-                    <span className="text-white text-xs">content</span>
-                  </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={
+                        selectedCompanyId
+                          ? companies
+                              .find((c) => c.id === selectedCompanyId)
+                              ?.emissions.map((e) => ({
+                                month: e.yearMonth,
+                                emissions: e.emissions,
+                              })) || []
+                          : companies
+                              .map((c) =>
+                                c.emissions.map((e) => ({
+                                  month: e.yearMonth,
+                                  emissions: e.emissions,
+                                }))
+                              )
+                              .flat()
+                      }
+                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff30" />
+                      <XAxis
+                        dataKey="month"
+                        stroke="#ffffff80"
+                        tick={{ fill: "#ffffffaa" }}
+                      />
+                      <YAxis
+                        stroke="#ffffff80"
+                        tick={{ fill: "#ffffffaa" }}
+                        unit="tCO2"
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#00000080",
+                          border: "none",
+                        }}
+                        itemStyle={{ color: "#fff" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="emissions"
+                        stroke="#60a5fa"
+                        strokeWidth={3}
+                        dot={{ r: 4 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
 
