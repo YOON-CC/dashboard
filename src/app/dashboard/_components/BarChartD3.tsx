@@ -136,6 +136,8 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
             y={yScale(d.emissions)}
             width={xScale.bandwidth()}
             height={dimensions.height - margin.bottom - yScale(d.emissions)}
+            rx={4}
+            ry={4}
             fill="url(#barGradient)"
             className="cursor-pointer transition-transform duration-200 hover:scale-y-105 hover:fill-white"
             onMouseEnter={(e) => {

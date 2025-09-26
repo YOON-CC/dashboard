@@ -15,6 +15,7 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  Newspaper,
 } from "lucide-react";
 import {
   companies,
@@ -27,7 +28,8 @@ import {
 } from "@/lib/api";
 import LineChartD3 from "./dashboard/_components/BarChartD3";
 import { useRouter } from "next/navigation";
-import DonutChart from "./dashboard/_components/DountChart";
+import DonutChart from "./dashboard/_components/HorizontalBarChart";
+import HorizontalBarChart from "./dashboard/_components/HorizontalBarChart";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -56,46 +58,32 @@ const Dashboard = () => {
     return { totalEmissions, monthlyData };
   };
 
+  const [search, setSearch] = useState("");
+  const filteredCompanies = companies.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     null
   );
 
   // 자회사 클릭 핸들러
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const handleCompanyClick = (companyId: string) => {
     setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
 
-  const checkScroll = () => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanScrollLeft(scrollLeft > 0);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
-  };
-
-  const scrollLeft = () => {
+  const scrollLeftFn = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: -280, behavior: "smooth" });
     }
   };
 
-  const scrollRight = () => {
+  const scrollRightFn = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: 280, behavior: "smooth" });
     }
   };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    el.addEventListener("scroll", checkScroll);
-    checkScroll(); // 초기 상태 체크
-
-    return () => el.removeEventListener("scroll", checkScroll);
-  }, []);
 
   const mockNews = [
     { id: 1, title: "탄소중립 정책 강화, 기업 부담 가중" },
@@ -198,7 +186,7 @@ const Dashboard = () => {
         </div>
 
         {/* 헤더 */}
-        <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-2xl px-6 py-2 flex items-center justify-between shadow-2xl">
+        <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
@@ -216,24 +204,6 @@ const Dashboard = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <select
-              value={selectedPeriod}
-              onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-white backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
-            >
-              <option value="1month" className="bg-gray-800">
-                1개월
-              </option>
-              <option value="3months" className="bg-gray-800">
-                3개월
-              </option>
-              <option value="6months" className="bg-gray-800">
-                6개월
-              </option>
-              <option value="1year" className="bg-gray-800">
-                1년
-              </option>
-            </select>
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-lg">A</span>
             </div>
@@ -241,7 +211,7 @@ const Dashboard = () => {
         </header>
 
         {/* 대시보드 콘텐츠 */}
-        <main className="flex-1 mt-6 flex flex-col backdrop-blur-[8px] bg-black/10 border border-white/20 rounded-3xl p-4">
+        <main className="flex-1 mt-3 flex flex-col backdrop-blur-[8px] bg-black/10 border border-white/20 rounded-3xl p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 왼족 */}
 
@@ -333,106 +303,60 @@ const Dashboard = () => {
                       </h2>
                       <div className="w-28 h-1 bg-gradient-to-r from-white to-green-400"></div>
                     </div>
+                    <input
+                      type="text"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="회사명 검색"
+                      className="w-[150px] p-2 pl-3 rounded-lg bg-black/20 text-white placeholder-white/50 border border-white/20 backdrop-blur-sm"
+                    />
                   </div>
 
                   {/* 자회사 컨테이너 */}
                   <div className="relative">
-                    {/* 좌우 페이드 효과 */}
-                    {/* 왼쪽 버튼 */}
-                    {scrollRef.current && scrollRef.current.scrollLeft > 0 && (
-                      <button
-                        onClick={scrollLeft}
-                        className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
-                      >
-                        <ChevronLeft className="w-5 h-5 text-white" />
-                      </button>
-                    )}
-
-                    {/* 오른쪽 버튼 */}
-                    {scrollRef.current &&
-                      scrollRef.current.scrollLeft +
-                        scrollRef.current.clientWidth <
-                        scrollRef.current.scrollWidth && (
-                        <button
-                          onClick={scrollRight}
-                          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
-                        >
-                          <ChevronRight className="w-5 h-5 text-white" />
-                        </button>
-                      )}
+                    <button
+                      onClick={scrollLeftFn}
+                      className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-white" />
+                    </button>
+                    <button
+                      onClick={scrollRightFn}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+                    >
+                      <ChevronRight className="w-5 h-5 text-white" />
+                    </button>
 
                     <div
                       ref={scrollRef}
                       className="flex gap-6 overflow-x-auto pb-4 overflow-x-hidden p-2"
                     >
-                      {companies.map((company, idx) => {
+                      {filteredCompanies.map((company, idx) => {
                         const { totalEmissions, monthlyData } =
                           parseCompanyEmissions(company);
-                        const colors = [
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-blue-500/20",
-                            border: "border-blue-500/20",
-                            text: "text-blue-300",
-                          },
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-emerald-500/20",
-                            border: "border-emerald-500/20",
-                            text: "text-emerald-300",
-                          },
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-amber-500/20",
-                            border: "border-amber-500/20",
-                            text: "text-amber-300",
-                          },
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-rose-500/20",
-                            border: "border-rose-500/20",
-                            text: "text-rose-300",
-                          },
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-indigo-500/20",
-                            border: "border-indigo-500/20",
-                            text: "text-indigo-300",
-                          },
-                          {
-                            gradient: "from-slate-700/60 to-slate-800/60",
-                            accent: "bg-teal-500/20",
-                            border: "border-teal-500/20",
-                            text: "text-teal-300",
-                          },
-                        ];
-                        const colorScheme = colors[idx % colors.length];
                         const isActive = selectedCompanyId === company.id;
+                        const colorScheme = [
+                          "blue",
+                          "emerald",
+                          "amber",
+                          "rose",
+                          "indigo",
+                          "teal",
+                        ][idx % 6];
+
                         return (
                           <div
                             key={company.id}
                             onClick={() => handleCompanyClick(company.id)}
-                            className={`
-                              flex-shrink-0 w-64 bg-gradient-to-br ${
-                                colorScheme.gradient
-                              } backdrop-blur-xl rounded-xl border ${
-                              colorScheme.border
-                            } shadow-lg transition-all duration-300 group relative overflow-hidden
-                              ${isActive ? "ring-1 ring-green-400" : ""}
-                              cursor-pointer
-                            `}
+                            className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl border border-${colorScheme}-500/20 shadow-lg transition-all duration-300 group relative overflow-hidden ${
+                              isActive ? "ring-1 ring-green-400" : ""
+                            } cursor-pointer`}
                           >
-                            {/* 카드 */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
-                            <div
-                              className={`absolute top-0 left-0 w-0.5 h-full ${colorScheme.accent}`}
-                            ></div>
-
+                            {/* 카드 내부 */}
                             <div className="relative z-10 p-4">
-                              {/* 헤더 */}
                               <div className="flex items-center justify-between mb-3">
                                 <div
-                                  className={`${colorScheme.accent} backdrop-blur-sm rounded-lg p-2 group-hover:scale-105 transition-transform duration-300`}
+                                  className={`bg-${colorScheme}-500/20 backdrop-blur-sm rounded-lg p-2`}
                                 >
                                   <Building2 className="w-4 h-4 text-white/80" />
                                 </div>
@@ -442,66 +366,35 @@ const Dashboard = () => {
                                   </span>
                                 </div>
                               </div>
-
-                              {/* 회사명*/}
-                              <h4 className="text-sm font-semibold text-white mb-3 truncate group-hover:text-white/90 transition-colors">
+                              <h4 className="text-sm font-semibold text-white mb-3 truncate">
                                 {company.name}
                               </h4>
-
-                              {/* 정보*/}
                               <div className="space-y-2 mb-3">
                                 <div className="flex justify-between items-center">
                                   <span className="text-white/60 text-xs">
                                     총 배출량
                                   </span>
                                   <span
-                                    className={`${colorScheme.text} text-sm font-semibold`}
+                                    className={`text-${colorScheme}-300 text-sm font-semibold`}
                                   >
                                     {totalEmissions} tCO2
                                   </span>
                                 </div>
-
-                                <div className="flex justify-between items-center">
-                                  <span className="text-white/60 text-xs">
-                                    예상 탄소세
-                                  </span>
-                                  <span className="text-white/80 text-xs font-medium">
-                                    ${(totalEmissions * 50).toLocaleString()}
-                                  </span>
-                                </div>
-
-                                <div className="w-full h-px bg-white/10 my-2"></div>
                               </div>
-
-                              {/* 월별 데이터 */}
-                              <div className="space-y-1">
-                                <h5 className="text-white/70 text-xs font-medium mb-2 flex items-center gap-1">
-                                  <div className="w-2 h-px bg-white/30 rounded"></div>
-                                  월별 현황
-                                </h5>
-
-                                <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
-                                  {monthlyData.slice(0, 6).map((m) => (
-                                    <div
-                                      key={m.month}
-                                      className="flex justify-between items-center text-xs"
-                                    >
-                                      <span className="text-white/50 font-medium">
-                                        {m.month}
-                                      </span>
-                                      <span className="text-white/70 font-medium">
-                                        {m.value}
-                                      </span>
-                                    </div>
-                                  ))}
-                                  {monthlyData.length > 6 && (
-                                    <div className="text-center">
-                                      <span className="text-white/40 text-xs">
-                                        +{monthlyData.length - 6}개월
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
+                              <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
+                                {monthlyData.slice(0, 6).map((m) => (
+                                  <div
+                                    key={m.month}
+                                    className="flex justify-between items-center text-xs"
+                                  >
+                                    <span className="text-white/50 font-medium">
+                                      {m.month}
+                                    </span>
+                                    <span className="text-white/70 font-medium">
+                                      {m.value}
+                                    </span>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                           </div>
@@ -593,22 +486,77 @@ const Dashboard = () => {
                   {companies
                     .filter((c) => c.id === selectedCompanyId)
                     .map((c) => {
-                      const total = c.emissions.reduce(
+                      const emissions = c.emissions;
+                      const lastMonth = emissions.slice(-1)[0]?.emissions || 0;
+                      const prevMonth =
+                        emissions.slice(-2, -1)[0]?.emissions || 0;
+
+                      const total = emissions.reduce(
                         (sum, e) => sum + e.emissions,
                         0
                       );
-                      const lastMonth =
-                        c.emissions.slice(-1)[0]?.emissions || 0;
+
+                      const totalCompanyValue = companies.reduce(
+                        (sum, company) =>
+                          sum +
+                          company.emissions.reduce(
+                            (s, e) => s + e.emissions,
+                            0
+                          ),
+                        0
+                      );
+
+                      // 다른 기업 평균
+                      const otherCompanies = companies.filter(
+                        (comp) => comp.id !== c.id
+                      );
+                      const otherAverage =
+                        otherCompanies.reduce(
+                          (sum, comp) =>
+                            sum + comp.emissions.slice(-1)[0]?.emissions || 0,
+                          0
+                        ) / otherCompanies.length;
+
+                      // 같은 자회사의 평균
+                      const sameCompanyAverage =
+                        emissions.reduce((sum, e) => sum + e.emissions, 0) /
+                        emissions.length;
+
+                      const isAboveAverage = lastMonth > otherAverage;
+
                       return (
-                        <div
-                          key={c.id}
-                          className="flex flex-col items-center justify-center space-y-2"
-                        >
-                          <DonutChart total={total} lastMonth={lastMonth} />
-                          <div className="space-y-1 text-white/80 text-sm text-center">
-                            <div>회사명: {c.name}</div>
-                            <div>총 배출량: {total} tCO2</div>
-                            <div>최근 월 배출량: {lastMonth} tCO2</div>
+                        <div key={c.id}>
+                          <HorizontalBarChart
+                            lastMonth={lastMonth}
+                            prevMonth={prevMonth}
+                            sameCompanyAverage={sameCompanyAverage}
+                            otherAverage={otherAverage}
+                          />
+                          <div className="flex flex-wrap justify-center gap-2">
+                            <span className="px-2 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs text-white/90">
+                              회사명: {c.name}
+                            </span>
+                            <span className="px-2 py-1 bg-purple-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
+                              이번 달: {lastMonth} tCO2
+                            </span>
+                            <span className="px-2 py-1 bg-blue-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
+                              저번 달: {prevMonth} tCO2
+                            </span>
+                            <span className="px-2 py-1 bg-green-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
+                              전체 대비:{" "}
+                              {((total / totalCompanyValue) * 100).toFixed(1)}%
+                            </span>
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                isAboveAverage
+                                  ? "bg-green-400/30 text-green-400"
+                                  : "bg-red-400/30 text-red-400"
+                              } backdrop-blur-md`}
+                            >
+                              {isAboveAverage
+                                ? "다른 기업 평균보다 높음"
+                                : "다른 기업 평균보다 낮음"}
+                            </span>
                           </div>
                         </div>
                       );
@@ -621,7 +569,7 @@ const Dashboard = () => {
                     <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg--500/20 rounded-full blur-3xl"></div>
                       <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5 text-green-400" />
+                        <Newspaper className="w-5 h-5 text-green-400" />
                         헤드라인 뉴스 Top 10
                       </h3>
                       <div className="grid gap-8">
