@@ -12,43 +12,49 @@ import GlobalOverview from "./(main)/_components/GlobalOverview";
 import HeadlineNews from "./(main)/_ui/HeadlineNews";
 import CompanySection from "./(main)/_components/CompanySection";
 import { calculateCompanyStatistics } from "./(main)/utils/statistics";
+import CompanyStatsBar from "./(main)/_ui/CompanyStatsBar";
 
 const Dashboard = () => {
   const router = useRouter();
+
+  // 상태
   const [showDetailDropdown, setShowDetailDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const [companies, setCompanies] = useState<Company[]>([]);
-  // const [countries, setCountries] = useState<Country[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  useEffect(() => {
-    fetchCompanies().then(setCompanies);
-    //   fetchCountries().then(setCountries);
-    fetchPosts().then(setPosts);
-  }, []);
-
-  const parseCompanyEmissions = (company: (typeof companies)[0]) => {
-    const totalEmissions = company.emissions.reduce(
-      (sum, e) => sum + e.emissions,
-      0
-    );
-    const monthlyData = company.emissions.map((e) => ({
-      month: e.yearMonth,
-      value: e.emissions,
-    }));
-    return { totalEmissions, monthlyData };
-  };
-
   const [search, setSearch] = useState("");
-  const filteredCompanies = companies.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
-
   const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
     null
   );
 
-  // 자회사 클릭 핸들러
+  // 데이터 상태
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  // 데이터 로딩
+  useEffect(() => {
+    fetchCompanies().then(setCompanies);
+    fetchPosts().then(setPosts);
+  }, []);
+
+  // 파싱 / 필터링 유틸
+  const parseCompanyEmissions = (company: Company) => {
+    const totalEmissions = company.emissions.reduce(
+      (sum, e) => sum + e.emissions,
+      0
+    );
+
+    const monthlyData = company.emissions.map((e) => ({
+      month: e.yearMonth,
+      value: e.emissions,
+    }));
+
+    return { totalEmissions, monthlyData };
+  };
+
+  const filteredCompanies = companies.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // 핸들러
   const handleCompanyClick = (companyId: string) => {
     setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
@@ -77,8 +83,7 @@ const Dashboard = () => {
         {/* 대시보드 콘텐츠 */}
         <main className="flex-1 mt-3 flex flex-col backdrop-blur-[8px] bg-black/10 border border-white/20 rounded-3xl p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* 왼족 */}
-
+            {/* 왼족 contents*/}
             <div className="lg:col-span-2 space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* 전체 배출량 카드  */}
@@ -97,7 +102,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* 오른쪽 */}
+            {/* 오른쪽 contents*/}
             <div className="flex flex-col justify-between h-full">
               {/* 월별 배출량 */}
               <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
@@ -147,36 +152,7 @@ const Dashboard = () => {
                             sameCompanyAverage={stats.sameCompanyAverage}
                             otherAverage={stats.otherAverage}
                           />
-                          <div className="flex flex-wrap justify-center gap-2">
-                            <span className="px-2 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs text-white/90">
-                              회사명: {c.name}
-                            </span>
-                            <span className="px-2 py-1 bg-purple-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
-                              이번 달: {stats.lastMonth} tCO2
-                            </span>
-                            <span className="px-2 py-1 bg-blue-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
-                              저번 달: {stats.prevMonth} tCO2
-                            </span>
-                            <span className="px-2 py-1 bg-green-500/20 backdrop-blur-md rounded-full text-xs text-white/90">
-                              전체 대비:{" "}
-                              {(
-                                (stats.total / stats.totalCompanyValue) *
-                                100
-                              ).toFixed(1)}
-                              %
-                            </span>
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-md ${
-                                stats.isAboveAverage
-                                  ? "bg-green-400/30 text-green-400"
-                                  : "bg-red-400/30 text-red-400"
-                              }`}
-                            >
-                              {stats.isAboveAverage
-                                ? "다른 기업 평균보다 높음"
-                                : "다른 기업 평균보다 낮음"}
-                            </span>
-                          </div>
+                          <CompanyStatsBar companyName={c.name} stats={stats} />
                         </div>
                       );
                     })}

@@ -1,7 +1,8 @@
 "use client";
 
 import { Leaf, X, Menu, Globe, Building2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface Company {
   id: string;
@@ -24,6 +25,15 @@ const SidePanel = ({
   companies,
 }: SidePanelProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isHomePage = pathname === "/";
+  const isDetailPage = pathname.startsWith("/detail");
+  const currentCompanyId = isDetailPage ? pathname.split("/")[2] : null;
+
+  useEffect(() => {
+    if (isDetailPage) setShowDetailDropdown(true);
+  }, [isDetailPage, setShowDetailDropdown]);
 
   return (
     <div
@@ -54,9 +64,14 @@ const SidePanel = ({
 
         {/* 네비게이션 */}
         <nav className="flex-1 px-4 space-y-2 relative">
+          {/* Home 버튼 */}
           <button
-            className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
             onClick={() => router.push("/")}
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+              isHomePage
+                ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
+                : "text-gray-300 hover:bg-white/10 hover:text-white"
+            }`}
           >
             <Globe className="w-5 h-5" />
             <span>Home</span>
@@ -66,10 +81,9 @@ const SidePanel = ({
           <div className="relative">
             <button
               onClick={() => setShowDetailDropdown((prev) => !prev)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
-              ${
-                showDetailDropdown
-                  ? "bg-gradient-to-r from-purple-500/40 to-blue-500/40 text-white border border-white/20 shadow-inner"
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                showDetailDropdown || isDetailPage
+                  ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
                   : "text-gray-300 hover:bg-white/10 hover:text-white"
               }`}
             >
@@ -93,7 +107,11 @@ const SidePanel = ({
                       router.push(`/detail/${c.id}`);
                       setShowDetailDropdown(false);
                     }}
-                    className="w-full text-left px-4 py-2 hover:bg-white/10 hover:text-white text-gray-300 rounded-xl transition-colors"
+                    className={`w-full text-left px-4 py-2 rounded-xl transition-colors ${
+                      c.id === currentCompanyId
+                        ? "bg-purple-500/30 text-white"
+                        : "text-gray-300 hover:bg-white/10 hover:text-white"
+                    }`}
                   >
                     {c.name}
                   </button>
