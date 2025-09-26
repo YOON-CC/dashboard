@@ -147,7 +147,7 @@ const Dashboard = () => {
       {/* 메인 */}
       <div className="flex-1 flex flex-col min-w-0 p-6">
         {/* 헤더 */}
-        <header className="backdrop-blur-[12px] bg-black/30 border border-white/20 rounded-3xl px-6 py-4 flex items-center justify-between shadow-2xl mb-6">
+        <header className="backdrop-blur-[12px] bg-black/30 border border-white/20 rounded-3xl px-6 py-3 flex items-center justify-between shadow-2xl">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
@@ -157,7 +157,7 @@ const Dashboard = () => {
             </button>
 
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
                 탄소 배출량 대시보드
               </h2>
               <p className="text-white/60">실시간 환경 영향 모니터링 시스템</p>
@@ -198,11 +198,11 @@ const Dashboard = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* 전체 배출량 카드  */}
                 <div className="lg:col-span-2">
-                  <div className="text-center mb-4">
+                  <div className="mb-3">
                     <h2 className="text-xl font-bold text-white/90 mb-2">
                       전체 현황
                     </h2>
-                    <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
+                    <div className="w-20 h-1 bg-gradient-to-r from-blue-400 to-green-400"></div>
                   </div>
 
                   <div className="bg-gradient-to-br from-gray-500/60 to-black-500/60 backdrop-blur-xl rounded-3xl px-6 py-4 border border-white/30 shadow-2xl relative overflow-hidden">
@@ -275,12 +275,12 @@ const Dashboard = () => {
 
                 {/* 자회사 그룹 섹션 */}
                 <div className="lg:col-span-2">
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-3">
                     <div>
                       <h2 className="text-xl font-bold text-white/90 mb-2">
                         자회사별 현황
                       </h2>
-                      <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-green-400"></div>
+                      <div className="w-28 h-1 bg-gradient-to-r from-blue-400 to-green-400"></div>
                     </div>
                     <span className="text-white/60 text-sm bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
                       {companies.length}개 자회사
@@ -436,18 +436,58 @@ const Dashboard = () => {
                       })}
                     </div>
                   </div>
+                  {/* 오른쪽 - posts */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-[200px] overflow-y-auto p-2 mini-scrollbar">
+                    {posts
+                      .filter((post) =>
+                        selectedCompanyId
+                          ? post.resourceUid === selectedCompanyId
+                          : true
+                      )
+                      .map((post) => (
+                        <div
+                          key={post.id}
+                          className="flex flex-col justify-between p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-[120px]"
+                        >
+                          <div className="flex items-center space-x-3 mb-2">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                              <span className="text-white font-semibold text-sm">
+                                {post.title.charAt(0)}
+                              </span>
+                            </div>
+                            <div>
+                              <p className="text-white font-medium text-sm">
+                                {post.title}
+                              </p>
+                              <p className="text-white/60 text-xs">
+                                {post.dateTime}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-white/80 text-sm">
+                              {post.content}
+                            </p>
+                            <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors">
+                              상세보기
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 오른쪽 -1 */}
+            {/* 오른쪽 */}
             <div className="space-y-6">
-              {/* 오른쪽 -2 */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                <h3 className="text-lg font-semibold text-white mb-4">
+              {/* 월별 배출량 */}
+              <div className="bg-gradient-to-br from-gray-800/50 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl"></div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-green-400" />
                   월별 배출량
                 </h3>
-
                 <div className="h-64">
                   <LineChartD3
                     companies={companies}
@@ -456,42 +496,97 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* 오른쪽 - posts */}
-              <div className="space-y-4">
-                {posts
-                  .filter((post) =>
-                    selectedCompanyId
-                      ? post.resourceUid === selectedCompanyId
-                      : true
-                  )
-                  .map((post) => (
-                    <div
-                      key={post.id}
-                      className="flex items-center justify-between p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-colors"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
-                            {post.title.charAt(0)}
-                          </span>
+              {/* 상세 정보 카드 */}
+              <div className="bg-gradient-to-br from-purple-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-purple-300" />
+                  상세 정보
+                </h3>
+                {selectedCompanyId ? (
+                  companies
+                    .filter((c) => c.id === selectedCompanyId)
+                    .map((c) => {
+                      const total = c.emissions.reduce(
+                        (sum, e) => sum + e.emissions,
+                        0
+                      );
+                      const lastMonth =
+                        c.emissions.slice(-1)[0]?.emissions || 0;
+                      return (
+                        <div
+                          key={c.id}
+                          className="space-y-2 text-white/80 text-sm"
+                        >
+                          <div className="flex justify-between">
+                            <span>회사명</span>
+                            <span className="font-semibold">{c.name}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>총 배출량</span>
+                            <span className="font-semibold">{total} tCO2</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>최근 월 배출량</span>
+                            <span className="font-semibold">
+                              {lastMonth} tCO2
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-white font-medium text-sm">
-                            {post.title}
-                          </p>
-                          <p className="text-white/60 text-xs">
-                            {post.dateTime}
+                      );
+                    })
+                ) : (
+                  <p className="text-white/50 text-sm">
+                    좌측 자회사를 선택하면 상세 정보가 표시됩니다.
+                  </p>
+                )}
+              </div>
+
+              {/* 예측 카드 */}
+              <div className="bg-gradient-to-br from-green-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
+                <div className="absolute bottom-0 right-0 w-32 h-32 bg-green-400/20 rounded-full blur-3xl"></div>
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-green-300" />
+                  배출량 예측 & 탄소세 계획
+                </h3>
+                {selectedCompanyId ? (
+                  companies
+                    .filter((c) => c.id === selectedCompanyId)
+                    .map((c) => {
+                      const lastMonthEmission =
+                        c.emissions.slice(-1)[0]?.emissions || 0;
+                      const predictedNextMonth = Math.round(
+                        lastMonthEmission * 1.05
+                      );
+                      const predictedTax = predictedNextMonth * 50;
+                      return (
+                        <div
+                          key={c.id}
+                          className="space-y-2 text-white/80 text-sm"
+                        >
+                          <div className="flex justify-between">
+                            <span>다음 달 예상 배출량</span>
+                            <span className="font-semibold">
+                              {predictedNextMonth} tCO2
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>예상 탄소세</span>
+                            <span className="font-semibold">
+                              ${predictedTax.toLocaleString()}
+                            </span>
+                          </div>
+                          <p className="text-green-400 text-xs mt-1">
+                            최근 달 대비 약 5% 증가 예상
                           </p>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white/80 text-sm">{post.content}</p>
-                        <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors">
-                          상세보기
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                      );
+                    })
+                ) : (
+                  <p className="text-white/50 text-sm">
+                    좌측 자회사를 선택하면 예측 정보가 표시됩니다.
+                  </p>
+                )}
               </div>
             </div>
           </div>
