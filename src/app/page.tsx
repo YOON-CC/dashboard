@@ -30,51 +30,12 @@ const Dashboard = () => {
 
   const [companies, setCompanies] = useState<Company[]>([]);
   // const [countries, setCountries] = useState<Country[]>([]);
-  // const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   useEffect(() => {
     fetchCompanies().then(setCompanies);
     //   fetchCountries().then(setCountries);
-    //   fetchPosts().then(setPosts);
+    fetchPosts().then(setPosts);
   }, []);
-
-  const countries = [
-    {
-      code: "US",
-      name: "United States",
-    },
-    {
-      code: "DE",
-      name: "Germany",
-    },
-    {
-      code: "KR",
-      name: "Korea",
-    },
-  ];
-
-  const posts = [
-    {
-      id: "p1",
-      title: "Sustainability Report1",
-      resourceUid: "c1",
-      dateTime: "2024-02",
-      content: "Quarterly CO2 update1",
-    },
-    {
-      id: "p2",
-      title: "Sustainability Report2",
-      resourceUid: "c2",
-      dateTime: "2024-03",
-      content: "Quarterly CO2 update2",
-    },
-    {
-      id: "p3",
-      title: "Sustainability Report3",
-      resourceUid: "c3",
-      dateTime: "2024-04",
-      content: "Quarterly CO2 update3",
-    },
-  ];
 
   const parseCompanyEmissions = (company: (typeof companies)[0]) => {
     const totalEmissions = company.emissions.reduce(
@@ -96,6 +57,27 @@ const Dashboard = () => {
       ),
     []
   );
+
+  const renderMiniChart = (monthlyData) => {
+    const maxValue = Math.max(...monthlyData.map((d) => d.value));
+    const minValue = Math.min(...monthlyData.map((d) => d.value));
+    const range = maxValue - minValue || 1;
+
+    return (
+      <div className="flex items-end space-x-1 h-12">
+        {monthlyData.slice(-6).map((data, idx) => {
+          const height = ((data.value - minValue) / range) * 100;
+          return (
+            <div
+              key={idx}
+              className="bg-gradient-to-t from-blue-500/60 to-blue-300/40 rounded-sm flex-1 min-h-[8px] transition-all duration-300"
+              style={{ height: `${Math.max(height, 15)}%` }}
+            />
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div
@@ -167,22 +149,20 @@ const Dashboard = () => {
       {/* 메인 */}
       <div className="flex-1 flex flex-col min-w-0 p-6">
         {/* 헤더 */}
-        <header className="backdrop-blur-[8px] bg-black/30 border border-white/20 rounded-2xl px-3 py-2 flex items-center justify-between shadow-xl">
+        <header className="backdrop-blur-[12px] bg-black/30 border border-white/20 rounded-3xl px-6 py-4 flex items-center justify-between shadow-2xl mb-6">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-3 rounded-2xl hover:bg-white/10 transition-all duration-200 hover:scale-105"
             >
-              {isDrawerOpen ? (
-                <X className="w-6 h-6 text-white" />
-              ) : (
-                <Menu className="w-6 h-6 text-white" />
-              )}
+              <Menu className="w-6 h-6 text-white" />
             </button>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">Dashboard</h2>
-              <p className="text-gray-300">대시보드</p>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
+                탄소 배출량 대시보드
+              </h2>
+              <p className="text-white/60">실시간 환경 영향 모니터링 시스템</p>
             </div>
           </div>
 
@@ -190,23 +170,23 @@ const Dashboard = () => {
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-white backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
             >
               <option value="1month" className="bg-gray-800">
-                1
+                1개월
               </option>
               <option value="3months" className="bg-gray-800">
-                2
+                3개월
               </option>
               <option value="6months" className="bg-gray-800">
-                3
+                6개월
               </option>
               <option value="1year" className="bg-gray-800">
-                4
+                1년
               </option>
             </select>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center shadow-md">
-              <span className="text-white font-medium">A</span>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-lg">A</span>
             </div>
           </div>
         </header>
@@ -291,7 +271,7 @@ const Dashboard = () => {
                   </div>
 
                   {/* 자회사 컨테이너 */}
-                  <div className="relative">
+                  <div className="relative ">
                     {/* 좌우 페이드 효과 */}
 
                     <div className="flex gap-6 overflow-x-auto pb-4 horizontal-scrollbar">
@@ -341,7 +321,7 @@ const Dashboard = () => {
                         return (
                           <div
                             key={company.id}
-                            className={`flex-shrink-0 w-64 bg-gradient-to-br ${colorScheme.gradient} backdrop-blur-xl rounded-xl border ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] group relative overflow-hidden`}
+                            className={`flex-shrink-0 w-64 bg-gradient-to-br ${colorScheme.gradient} backdrop-blur-xl rounded-xl border ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300  group relative overflow-hidden`}
                           >
                             {/* 카드 */}
                             <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent"></div>
@@ -432,128 +412,10 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-
-              {/* 왼쪽 하단 */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-semibold text-white">content</h3>
-                  <button className="text-white/70 hover:text-white transition-colors">
-                    ...
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                      <span className="text-white/80">content</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-white/70">content</span>
-                      <div className="w-8 h-8 bg-blue-500/30 rounded-full flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-blue-300" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div
-                      className="bg-blue-400 h-2 rounded-full"
-                      style={{ width: "65%" }}
-                    ></div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      <span className="text-white/80">content</span>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-white/70">content</span>
-                      <div className="w-8 h-8 bg-green-500/30 rounded-full flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-green-300" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div
-                      className="bg-green-400 h-2 rounded-full"
-                      style={{ width: "20%" }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 왼쪽 하단 */}
-              {/* <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  content
-                </h3>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                    <span className="text-white/80 text-sm">content</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <svg className="w-16 h-8" viewBox="0 0 100 40">
-                      <path
-                        d="M0,20 Q25,10 50,20 T100,20"
-                        stroke="#60a5fa"
-                        strokeWidth="2"
-                        fill="none"
-                      />
-                      <circle cx="50" cy="20" r="3" fill="#60a5fa" />
-                    </svg>
-                    <span className="text-white/70 text-sm">Solved</span>
-                  </div>
-                </div>
-              </div> */}
             </div>
 
             {/* 오른쪽 -1 */}
             <div className="space-y-6">
-              {/* Calendar */}
-              {/* <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-white">content</h3>
-                  <span className="text-white/70 text-sm">content</span>
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 text-xs text-white/60 mb-2">
-                  <div className="text-center p-1">S</div>
-                  <div className="text-center p-1">M</div>
-                  <div className="text-center p-1">T</div>
-                  <div className="text-center p-1">W</div>
-                  <div className="text-center p-1">T</div>
-                  <div className="text-center p-1">F</div>
-                  <div className="text-center p-1">S</div>
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 text-sm">
-                  {Array.from({ length: 35 }, (_, i) => {
-                    const day = i - 5;
-                    const isCurrentMonth = day > 0 && day <= 31;
-                    const isToday = day === 1;
-
-                    return (
-                      <div
-                        key={i}
-                        className={`text-center p-2 rounded-lg ${
-                          isCurrentMonth
-                            ? isToday
-                              ? "bg-blue-500 text-white"
-                              : "text-white/80 hover:bg-white/10"
-                            : "text-white/30"
-                        }`}
-                      >
-                        {isCurrentMonth ? day : day <= 0 ? 31 + day : day - 31}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div> */}
-
               {/* 오른쪽 -2 */}
               <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
                 <h3 className="text-lg font-semibold text-white mb-4">
