@@ -137,7 +137,7 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
             width={xScale.bandwidth()}
             height={dimensions.height - margin.bottom - yScale(d.emissions)}
             fill="url(#barGradient)"
-            className="cursor-pointer transition-transform duration-200 hover:scale-y-105 hover:fill-blue-400"
+            className="cursor-pointer transition-transform duration-200 hover:scale-y-105 hover:fill-white"
             onMouseEnter={(e) => {
               if (!svgRef.current) return;
               const rect = svgRef.current.getBoundingClientRect();
@@ -155,8 +155,8 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
         {/* 그라디언트 정의 */}
         <defs>
           <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#60a5fa" stopOpacity={0.8} />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.4} />
+            <stop offset="0%" stopColor="#2f4f4f" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="##00ffaa" stopOpacity={0.4} />
           </linearGradient>
         </defs>
       </svg>
