@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Leaf,
   AlertTriangle,
@@ -13,6 +13,8 @@ import {
   TrendingUp,
   Users,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import {
   companies,
@@ -58,9 +60,41 @@ const Dashboard = () => {
   );
 
   // 자회사 클릭 핸들러
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const handleCompanyClick = (companyId: string) => {
     setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
+
+  const checkScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+    setCanScrollLeft(scrollLeft > 0);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
+  };
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -280, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 280, behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    el.addEventListener("scroll", checkScroll);
+    checkScroll(); // 초기 상태 체크
+
+    return () => el.removeEventListener("scroll", checkScroll);
+  }, []);
 
   const mockNews = [
     { id: 1, title: "탄소중립 정책 강화, 기업 부담 가중" },
@@ -163,7 +197,7 @@ const Dashboard = () => {
         </div>
 
         {/* 헤더 */}
-        <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-3xl px-6 py-2 flex items-center justify-between shadow-2xl">
+        <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-2xl px-6 py-2 flex items-center justify-between shadow-2xl">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
@@ -301,10 +335,35 @@ const Dashboard = () => {
                   </div>
 
                   {/* 자회사 컨테이너 */}
-                  <div className="relative ">
+                  <div className="relative">
                     {/* 좌우 페이드 효과 */}
+                    {/* 왼쪽 버튼 */}
+                    {scrollRef.current && scrollRef.current.scrollLeft > 0 && (
+                      <button
+                        onClick={scrollLeft}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+                      >
+                        <ChevronLeft className="w-5 h-5 text-white" />
+                      </button>
+                    )}
 
-                    <div className="flex gap-6 overflow-x-auto pb-4 horizontal-scrollbar p-2">
+                    {/* 오른쪽 버튼 */}
+                    {scrollRef.current &&
+                      scrollRef.current.scrollLeft +
+                        scrollRef.current.clientWidth <
+                        scrollRef.current.scrollWidth && (
+                        <button
+                          onClick={scrollRight}
+                          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+                        >
+                          <ChevronRight className="w-5 h-5 text-white" />
+                        </button>
+                      )}
+
+                    <div
+                      ref={scrollRef}
+                      className="flex gap-6 overflow-x-auto pb-4 overflow-x-hidden p-2"
+                    >
                       {companies.map((company, idx) => {
                         const { totalEmissions, monthlyData } =
                           parseCompanyEmissions(company);
