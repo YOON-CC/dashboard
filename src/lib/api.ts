@@ -51,6 +51,26 @@ export const companies: Company[] = [
       { yearMonth: "2024-03", source: "lpg", emissions: 120 },
     ],
   },
+  {
+    id: "c3",
+    name: "Apple",
+    country: "ko",
+    emissions: [
+      { yearMonth: "2024-01", source: "diesel", emissions: 80 },
+      { yearMonth: "2024-02", source: "gasoline", emissions: 105 },
+      { yearMonth: "2024-03", source: "lpg", emissions: 120 },
+    ],
+  },
+  {
+    id: "c4",
+    name: "Banana",
+    country: "ko",
+    emissions: [
+      { yearMonth: "2024-01", source: "diesel", emissions: 80 },
+      { yearMonth: "2024-02", source: "gasoline", emissions: 105 },
+      { yearMonth: "2024-03", source: "lpg", emissions: 120 },
+    ],
+  },
 ];
 
 export const posts: Post[] = [

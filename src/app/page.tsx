@@ -28,61 +28,14 @@ const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
 
-  // const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   // const [countries, setCountries] = useState<Country[]>([]);
   // const [posts, setPosts] = useState<Post[]>([]);
-  // useEffect(() => {
-  //   fetchCompanies().then(setCompanies);
-  //   fetchCountries().then(setCountries);
-  //   fetchPosts().then(setPosts);
-  // }, []);
-
-  const companies = [
-    {
-      id: "c1",
-      name: "Acme Corp",
-      country: "US",
-      emissions: [
-        {
-          yearMonth: "2024-01",
-          source: "gasoline",
-          emissions: 120,
-        },
-        {
-          yearMonth: "2024-02",
-          source: "diesel",
-          emissions: 110,
-        },
-        {
-          yearMonth: "2024-03",
-          source: "lpg",
-          emissions: 95,
-        },
-      ],
-    },
-    {
-      id: "c2",
-      name: "Globex",
-      country: "DE",
-      emissions: [
-        {
-          yearMonth: "2024-01",
-          source: "diesel",
-          emissions: 80,
-        },
-        {
-          yearMonth: "2024-02",
-          source: "gasoline",
-          emissions: 105,
-        },
-        {
-          yearMonth: "2024-03",
-          source: "lpg",
-          emissions: 120,
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    fetchCompanies().then(setCompanies);
+    //   fetchCountries().then(setCountries);
+    //   fetchPosts().then(setPosts);
+  }, []);
 
   const countries = [
     {
@@ -102,10 +55,24 @@ const Dashboard = () => {
   const posts = [
     {
       id: "p1",
-      title: "Sustainability Report",
+      title: "Sustainability Report1",
       resourceUid: "c1",
       dateTime: "2024-02",
-      content: "Quarterly CO2 update",
+      content: "Quarterly CO2 update1",
+    },
+    {
+      id: "p2",
+      title: "Sustainability Report2",
+      resourceUid: "c2",
+      dateTime: "2024-03",
+      content: "Quarterly CO2 update2",
+    },
+    {
+      id: "p3",
+      title: "Sustainability Report3",
+      resourceUid: "c3",
+      dateTime: "2024-04",
+      content: "Quarterly CO2 update3",
     },
   ];
 
@@ -250,61 +217,220 @@ const Dashboard = () => {
             {/* 왼족 */}
 
             <div className="lg:col-span-2 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="bg-white/20 rounded-full p-3">
-                      <Users className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-white/70 text-sm">...</span>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* 전체 배출량 카드  */}
+                <div className="lg:col-span-2">
+                  <div className="text-center mb-4">
+                    <h2 className="text-xl font-bold text-white/90 mb-2">
+                      전체 현황
+                    </h2>
+                    <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-1">
-                    전체 배출량
-                  </h3>
-                  <p className="text-white/70 text-sm mb-2">
-                    {totalEmissionsAll} tCO2
-                  </p>
-                  <div className="flex items-center text-green-300 text-xs">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    +2.3%
+
+                  <div className="bg-gradient-to-br from-purple-500/60 to-blue-500/60 backdrop-blur-xl rounded-3xl p-8 border border-white/30 shadow-2xl relative overflow-hidden">
+                    {/* 배경 장식 */}
+
+                    <div className="relative z-10">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="bg-white/20 rounded-2xl p-4 backdrop-blur-sm">
+                          <Users className="w-8 h-8 text-white drop-shadow-sm" />
+                        </div>
+                        <div className="text-right">
+                          <span className="text-white/70 text-sm font-medium">
+                            Global Overview
+                          </span>
+                          <div className="w-2 h-2 bg-green-400 rounded-full ml-auto mt-1 animate-pulse"></div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-sm">
+                            전체 배출량
+                          </h3>
+                          <p className="text-white/80 text-2xl font-semibold mb-1">
+                            {totalEmissionsAll}{" "}
+                            <span className="text-lg font-normal">tCO2</span>
+                          </p>
+                        </div>
+
+                        <div className="border-l border-white/20 pl-6">
+                          <p className="text-white/70 text-sm mb-1">
+                            예상 탄소세
+                          </p>
+                          <p className="text-white font-bold text-xl">
+                            ${(totalEmissionsAll * 50).toLocaleString()}
+                          </p>
+                        </div>
+
+                        <div className="border-l border-white/20 pl-6">
+                          <p className="text-white/70 text-sm mb-1">
+                            자회사 수
+                          </p>
+                          <p className="text-white font-bold text-xl">
+                            {companies.length}개 회사
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                {companies.map((company) => {
-                  const { totalEmissions, monthlyData } =
-                    parseCompanyEmissions(company);
-                  return (
-                    <div
-                      key={company.id}
-                      className="bg-gradient-to-br from-blue-500/30 to-blue-600/30 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="bg-white/20 rounded-full p-3">
-                          <Building2 className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-white/70 text-sm">
-                          {company.country}
-                        </span>
-                      </div>
-                      <h3 className="text-2xl font-bold text-white mb-1">
-                        {company.name}
-                      </h3>
-                      <p className="text-white/70 text-sm mb-2">
-                        총 배출량: {totalEmissions} tCO2
-                      </p>
-                      <div className="flex flex-col space-y-1">
-                        {monthlyData.map((m) => (
-                          <div
-                            key={m.month}
-                            className="flex justify-between text-white/70 text-xs"
-                          >
-                            <span>{m.month}</span>
-                            <span>{m.value} tCO2</span>
-                          </div>
-                        ))}
-                      </div>
+
+                {/* 자회사 그룹 섹션 */}
+                <div className="lg:col-span-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-xl font-bold text-white/90 mb-2">
+                        자회사별 현황
+                      </h2>
+                      <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-green-400"></div>
                     </div>
-                  );
-                })}
+                    <span className="text-white/60 text-sm bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
+                      {companies.length}개 자회사
+                    </span>
+                  </div>
+
+                  {/* 자회사 컨테이너 */}
+                  <div className="relative">
+                    {/* 좌우 페이드 효과 */}
+
+                    <div className="flex gap-6 overflow-x-auto pb-4 horizontal-scrollbar">
+                      {companies.map((company, idx) => {
+                        const { totalEmissions, monthlyData } =
+                          parseCompanyEmissions(company);
+                        const colors = [
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-blue-500/20",
+                            border: "border-blue-500/20",
+                            text: "text-blue-300",
+                          },
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-emerald-500/20",
+                            border: "border-emerald-500/20",
+                            text: "text-emerald-300",
+                          },
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-amber-500/20",
+                            border: "border-amber-500/20",
+                            text: "text-amber-300",
+                          },
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-rose-500/20",
+                            border: "border-rose-500/20",
+                            text: "text-rose-300",
+                          },
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-indigo-500/20",
+                            border: "border-indigo-500/20",
+                            text: "text-indigo-300",
+                          },
+                          {
+                            gradient: "from-slate-700/60 to-slate-800/60",
+                            accent: "bg-teal-500/20",
+                            border: "border-teal-500/20",
+                            text: "text-teal-300",
+                          },
+                        ];
+                        const colorScheme = colors[idx % colors.length];
+
+                        return (
+                          <div
+                            key={company.id}
+                            className={`flex-shrink-0 w-64 bg-gradient-to-br ${colorScheme.gradient} backdrop-blur-xl rounded-xl border ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.01] group relative overflow-hidden`}
+                          >
+                            {/* 카드 */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent"></div>
+                            <div
+                              className={`absolute top-0 left-0 w-0.5 h-full ${colorScheme.accent}`}
+                            ></div>
+
+                            <div className="relative z-10 p-4">
+                              {/* 헤더 */}
+                              <div className="flex items-center justify-between mb-3">
+                                <div
+                                  className={`${colorScheme.accent} backdrop-blur-sm rounded-lg p-2 group-hover:scale-105 transition-transform duration-300`}
+                                >
+                                  <Building2 className="w-4 h-4 text-white/80" />
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-white/60 text-xs font-medium">
+                                    {company.country}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* 회사명*/}
+                              <h4 className="text-sm font-semibold text-white mb-3 truncate group-hover:text-white/90 transition-colors">
+                                {company.name}
+                              </h4>
+
+                              {/* 정보*/}
+                              <div className="space-y-2 mb-3">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-white/60 text-xs">
+                                    총 배출량
+                                  </span>
+                                  <span
+                                    className={`${colorScheme.text} text-sm font-semibold`}
+                                  >
+                                    {totalEmissions} tCO2
+                                  </span>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                  <span className="text-white/60 text-xs">
+                                    예상 탄소세
+                                  </span>
+                                  <span className="text-white/80 text-xs font-medium">
+                                    ${(totalEmissions * 50).toLocaleString()}
+                                  </span>
+                                </div>
+
+                                <div className="w-full h-px bg-white/10 my-2"></div>
+                              </div>
+
+                              {/* 월별 데이터 */}
+                              <div className="space-y-1">
+                                <h5 className="text-white/70 text-xs font-medium mb-2 flex items-center gap-1">
+                                  <div className="w-2 h-px bg-white/30 rounded"></div>
+                                  월별 현황
+                                </h5>
+
+                                <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
+                                  {monthlyData.slice(0, 6).map((m) => (
+                                    <div
+                                      key={m.month}
+                                      className="flex justify-between items-center text-xs"
+                                    >
+                                      <span className="text-white/50 font-medium">
+                                        {m.month}
+                                      </span>
+                                      <span className="text-white/70 font-medium">
+                                        {m.value}
+                                      </span>
+                                    </div>
+                                  ))}
+                                  {monthlyData.length > 6 && (
+                                    <div className="text-center">
+                                      <span className="text-white/40 text-xs">
+                                        +{monthlyData.length - 6}개월
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* 왼쪽 하단 */}
@@ -474,59 +600,42 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* 오른쪽 -3 */}
+              {/* 오른쪽 - posts */}
               <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-white">content</h3>
+                  <h3 className="text-lg font-semibold text-white">
+                    최근 보고서
+                  </h3>
                   <button className="text-white/70 hover:text-white">
                     ...
                   </button>
                 </div>
 
                 <div className="space-y-4">
-                  {[
-                    {
-                      name: "name",
-                      gender: "gender",
-                      age: "age",
-                      avatar: "avatar",
-                    },
-                    {
-                      name: "name",
-                      gender: "gender",
-                      age: "age",
-                      avatar: "avatar",
-                    },
-                    {
-                      name: "Pname",
-                      gender: "gender",
-                      age: "age",
-                      avatar: "avatar",
-                    },
-                  ].map((patient, idx) => (
+                  {posts.map((post) => (
                     <div
-                      key={idx}
+                      key={post.id}
                       className="flex items-center justify-between p-3 bg-white/5 rounded-xl"
                     >
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
                           <span className="text-white font-semibold text-sm">
-                            {patient.avatar}
+                            {post.title.charAt(0)}
                           </span>
                         </div>
                         <div>
                           <p className="text-white font-medium text-sm">
-                            {patient.name}
+                            {post.title}
                           </p>
                           <p className="text-white/60 text-xs">
-                            {patient.gender}
+                            {post.dateTime}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-white/80 text-sm">{patient.age}</p>
+                        <p className="text-white/80 text-sm">{post.content}</p>
                         <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors">
-                          content
+                          상세보기
                         </button>
                       </div>
                     </div>
