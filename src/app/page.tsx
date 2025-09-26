@@ -37,7 +37,7 @@ import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const router = useRouter();
-
+  const [showDetailDropdown, setShowDetailDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
 
@@ -79,22 +79,12 @@ const Dashboard = () => {
       }}
     >
       {/* 사이드패널 */}
-      {/* <div className="bg-amber-400">
-        <h2>Companies</h2>
-        <pre>{JSON.stringify(companies, null, 2)}</pre>
-
-        <h2>Countries</h2>
-        <pre>{JSON.stringify(countries, null, 2)}</pre>
-
-        <h2>Posts</h2>
-        <pre>{JSON.stringify(posts, null, 2)}</pre>
-      </div> */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-64"
         } transition-transform duration-300 ease-in-out`}
       >
-        <div className="flex flex-col h-full backdrop-blur-[12px] bg-black/30  border-r border-white/20 shadow-2xl rounded-r-2xl">
+        <div className="flex flex-col h-full backdrop-blur-[12px] bg-black/30 border-r border-white/20 shadow-2xl rounded-r-2xl">
           <div className="flex items-center justify-between p-6">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center shadow-md">
@@ -114,26 +104,53 @@ const Dashboard = () => {
             </button>
           </div>
 
-          <nav className="flex-1 px-4 space-y-2">
-            {[
-              { icon: Globe, label: "menu1", active: true },
-              { icon: Building2, label: "menu2" },
-              { icon: DollarSign, label: "menu3" },
-              { icon: Target, label: "menu4" },
-              { icon: AlertTriangle, label: "menu5" },
-            ].map((item, index) => (
+          <nav className="flex-1 px-4 space-y-2 relative">
+            <button
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner`}
+              onClick={() => router.push("/")}
+            >
+              <Globe className="w-5 h-5" />
+              <span>Home</span>
+            </button>
+
+            <div className="relative">
               <button
-                key={index}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  item.active
-                    ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
-                    : "text-gray-300 hover:bg-white/10 hover:text-white"
-                }`}
+                onClick={() => setShowDetailDropdown((prev) => !prev)}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200
+              ${
+                showDetailDropdown
+                  ? "bg-gradient-to-r from-purple-500/40 to-blue-500/40 text-white border border-white/20 shadow-inner"
+                  : "text-gray-300 hover:bg-white/10 hover:text-white"
+              }`}
               >
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
+                <Building2 className="w-5 h-5" />
+                <span>Detail</span>
+                <span
+                  className={`ml-auto transition-transform duration-200 ${
+                    showDetailDropdown ? "rotate-180" : ""
+                  }`}
+                >
+                  ▼
+                </span>
               </button>
-            ))}
+
+              {showDetailDropdown && (
+                <div className="absolute left-0 top-full mt-1 w-full bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg z-50">
+                  {companies.map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => {
+                        router.push(`/detail/${c.id}`);
+                        setShowDetailDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-white/10 hover:text-white text-gray-300 rounded-xl transition-colors"
+                    >
+                      {c.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </div>
@@ -492,17 +509,26 @@ const Dashboard = () => {
 
               {/* 상세 정보 카드 */}
               <div
-                className="bg-gradient-to-br from-purple-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden"
+                className="group bg-gradient-to-br from-purple-700/30 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden cursor-pointer hover:scale-101 hover:shadow-2xl transition-transform duration-300"
                 onClick={() =>
                   selectedCompanyId &&
                   router.push(`/detail/${selectedCompanyId}`)
                 }
               >
+                {/* 배경 장식 */}
                 <div className="absolute top-0 left-0 w-24 h-24 bg-purple-500/20 rounded-full blur-2xl"></div>
-                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <Building2 className="w-5 h-5 text-purple-300" />
-                  상세 정보
+
+                {/* 제목과 화살표 */}
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-purple-300" />
+                    상세 정보
+                  </span>
+                  <span className="text-purple-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                    &rarr;
+                  </span>
                 </h3>
+
                 {selectedCompanyId ? (
                   companies
                     .filter((c) => c.id === selectedCompanyId)
