@@ -58,25 +58,13 @@ const Dashboard = () => {
     []
   );
 
-  const renderMiniChart = (monthlyData) => {
-    const maxValue = Math.max(...monthlyData.map((d) => d.value));
-    const minValue = Math.min(...monthlyData.map((d) => d.value));
-    const range = maxValue - minValue || 1;
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(
+    null
+  );
 
-    return (
-      <div className="flex items-end space-x-1 h-12">
-        {monthlyData.slice(-6).map((data, idx) => {
-          const height = ((data.value - minValue) / range) * 100;
-          return (
-            <div
-              key={idx}
-              className="bg-gradient-to-t from-blue-500/60 to-blue-300/40 rounded-sm flex-1 min-h-[8px] transition-all duration-300"
-              style={{ height: `${Math.max(height, 15)}%` }}
-            />
-          );
-        })}
-      </div>
-    );
+  // 자회사 클릭 핸들러
+  const handleCompanyClick = (companyId: string) => {
+    setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
 
   return (
@@ -207,7 +195,7 @@ const Dashboard = () => {
                     <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-purple-500/60 to-blue-500/60 backdrop-blur-xl rounded-3xl p-8 border border-white/30 shadow-2xl relative overflow-hidden">
+                  <div className="bg-gradient-to-br from-purple-500/60 to-blue-500/60 backdrop-blur-xl rounded-3xl p-10 border border-white/30 shadow-2xl relative overflow-hidden">
                     {/* 배경 장식 */}
 
                     <div className="relative z-10">
@@ -274,7 +262,7 @@ const Dashboard = () => {
                   <div className="relative ">
                     {/* 좌우 페이드 효과 */}
 
-                    <div className="flex gap-6 overflow-x-auto pb-4 horizontal-scrollbar">
+                    <div className="flex gap-6 overflow-x-auto pb-4 horizontal-scrollbar p-2">
                       {companies.map((company, idx) => {
                         const { totalEmissions, monthlyData } =
                           parseCompanyEmissions(company);
@@ -317,11 +305,20 @@ const Dashboard = () => {
                           },
                         ];
                         const colorScheme = colors[idx % colors.length];
-
+                        const isActive = selectedCompanyId === company.id;
                         return (
                           <div
                             key={company.id}
-                            className={`flex-shrink-0 w-64 bg-gradient-to-br ${colorScheme.gradient} backdrop-blur-xl rounded-xl border ${colorScheme.border} shadow-lg hover:shadow-xl transition-all duration-300  group relative overflow-hidden`}
+                            onClick={() => handleCompanyClick(company.id)}
+                            className={`
+                              flex-shrink-0 w-64 bg-gradient-to-br ${
+                                colorScheme.gradient
+                              } backdrop-blur-xl rounded-xl border ${
+                              colorScheme.border
+                            } shadow-lg transition-all duration-300 group relative overflow-hidden
+                              ${isActive ? "ring-1 ring-blue-400" : ""}
+                              cursor-pointer
+                            `}
                           >
                             {/* 카드 */}
                             <div className="absolute inset-0 bg-gradient-to-br from-white/3 to-transparent"></div>
@@ -463,21 +460,17 @@ const Dashboard = () => {
               </div>
 
               {/* 오른쪽 - posts */}
-              <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-xl">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-white">
-                    최근 보고서
-                  </h3>
-                  <button className="text-white/70 hover:text-white">
-                    ...
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {posts.map((post) => (
+              <div className="space-y-4">
+                {posts
+                  .filter((post) =>
+                    selectedCompanyId
+                      ? post.resourceUid === selectedCompanyId
+                      : true
+                  )
+                  .map((post) => (
                     <div
                       key={post.id}
-                      className="flex items-center justify-between p-3 bg-white/5 rounded-xl"
+                      className="flex items-center justify-between p-3 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-colors"
                     >
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
@@ -502,7 +495,6 @@ const Dashboard = () => {
                       </div>
                     </div>
                   ))}
-                </div>
               </div>
             </div>
           </div>

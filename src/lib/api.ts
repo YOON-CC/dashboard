@@ -28,6 +28,8 @@ export const countries: Country[] = [
   { code: "US", name: "United States" },
   { code: "DE", name: "Germany" },
   { code: "KR", name: "Korea" },
+  { code: "JP", name: "Japan" },
+  { code: "FR", name: "France" },
 ];
 
 export const companies: Company[] = [
@@ -39,6 +41,7 @@ export const companies: Company[] = [
       { yearMonth: "2024-01", source: "gasoline", emissions: 120 },
       { yearMonth: "2024-02", source: "diesel", emissions: 110 },
       { yearMonth: "2024-03", source: "lpg", emissions: 95 },
+      { yearMonth: "2024-04", source: "electric", emissions: 60 },
     ],
   },
   {
@@ -49,26 +52,51 @@ export const companies: Company[] = [
       { yearMonth: "2024-01", source: "diesel", emissions: 80 },
       { yearMonth: "2024-02", source: "gasoline", emissions: 105 },
       { yearMonth: "2024-03", source: "lpg", emissions: 120 },
+      { yearMonth: "2024-04", source: "electric", emissions: 50 },
     ],
   },
   {
     id: "c3",
-    name: "Apple",
-    country: "ko",
+    name: "Apple KR",
+    country: "KR",
     emissions: [
       { yearMonth: "2024-01", source: "diesel", emissions: 80 },
       { yearMonth: "2024-02", source: "gasoline", emissions: 105 },
       { yearMonth: "2024-03", source: "lpg", emissions: 120 },
+      { yearMonth: "2024-04", source: "electric", emissions: 70 },
     ],
   },
   {
     id: "c4",
-    name: "Banana",
-    country: "ko",
+    name: "Banana KR",
+    country: "KR",
     emissions: [
-      { yearMonth: "2024-01", source: "diesel", emissions: 80 },
-      { yearMonth: "2024-02", source: "gasoline", emissions: 105 },
-      { yearMonth: "2024-03", source: "lpg", emissions: 120 },
+      { yearMonth: "2024-01", source: "diesel", emissions: 60 },
+      { yearMonth: "2024-02", source: "gasoline", emissions: 85 },
+      { yearMonth: "2024-03", source: "lpg", emissions: 90 },
+      { yearMonth: "2024-04", source: "electric", emissions: 40 },
+    ],
+  },
+  {
+    id: "c5",
+    name: "Nippon Tech",
+    country: "JP",
+    emissions: [
+      { yearMonth: "2024-01", source: "gasoline", emissions: 100 },
+      { yearMonth: "2024-02", source: "diesel", emissions: 90 },
+      { yearMonth: "2024-03", source: "lpg", emissions: 110 },
+      { yearMonth: "2024-04", source: "electric", emissions: 55 },
+    ],
+  },
+  {
+    id: "c6",
+    name: "Paris Energy",
+    country: "FR",
+    emissions: [
+      { yearMonth: "2024-01", source: "diesel", emissions: 70 },
+      { yearMonth: "2024-02", source: "gasoline", emissions: 95 },
+      { yearMonth: "2024-03", source: "lpg", emissions: 85 },
+      { yearMonth: "2024-04", source: "electric", emissions: 45 },
     ],
   },
 ];
@@ -79,7 +107,35 @@ export const posts: Post[] = [
     title: "Sustainability Report",
     resourceUid: "c1",
     dateTime: "2024-02",
-    content: "Quarterly CO2 update",
+    content: "Quarterly CO2 update for Acme Corp",
+  },
+  {
+    id: "p2",
+    title: "Emission Overview",
+    resourceUid: "c2",
+    dateTime: "2024-03",
+    content: "Globex diesel consumption trends",
+  },
+  {
+    id: "p3",
+    title: "Quarterly Sustainability",
+    resourceUid: "c3",
+    dateTime: "2024-03",
+    content: "Apple KR emissions report",
+  },
+  {
+    id: "p4",
+    title: "Carbon Footprint Analysis",
+    resourceUid: "c5",
+    dateTime: "2024-04",
+    content: "Nippon Tech environmental impact summary",
+  },
+  {
+    id: "p5",
+    title: "Eco Report",
+    resourceUid: "c6",
+    dateTime: "2024-04",
+    content: "Paris Energy CO2 reduction initiatives",
   },
 ];
 
