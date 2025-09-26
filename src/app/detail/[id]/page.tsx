@@ -10,6 +10,9 @@ import PieChart from "./components/PieChart";
 import { Globe } from "lucide-react";
 import LineChartD3 from "@/app/(main)/_components/BarChartD3";
 import BarChartD3 from "@/app/(main)/_components/BarChartD3";
+import HorizontalBarChart from "@/app/(main)/_components/HorizontalBarChart";
+import CompanyStatsBar from "@/app/(main)/_ui/CompanyStatsBar";
+import { calculateCompanyStatistics } from "@/app/(main)/utils/statistics";
 export default function CompanyDetailPage() {
   const params = useParams();
   const companyId = params.id;
@@ -109,20 +112,8 @@ export default function CompanyDetailPage() {
           </div>
 
           {/* 오른쪽 */}
-          {/* <div className="flex-1 p-4 rounded-xl flex flex-col items-center justify-center">
-            <h3 className="text-white text-xl font-bold mb-2">배출 원천</h3>
-            <PieChart
-              data={Array.from(
-                d3.rollup(
-                  company.emissions,
-                  (v) => d3.sum(v, (d) => d.emissions),
-                  (d) => d.source
-                ),
-                ([source, value]) => ({ source, value })
-              )}
-            />
-          </div> */}
           <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-4 h-full p-4 rounded-xl">
+            {/* 위쪽 2칸 */}
             <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl">
               <h3 className="text-white text-xl font-bold mb-2">배출 원천</h3>
               <PieChart
@@ -136,14 +127,34 @@ export default function CompanyDetailPage() {
                 )}
               />
             </div>
+
             <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl">
-              <BarChartD3 companies={companies} selectedCompanyId={companyId} />
+              <BarChartD3
+                companies={companies}
+                selectedCompanyId={companyId}
+                isDetailPage={true}
+              />
             </div>
-            <div className="bg-green-400 flex items-center justify-center">
-              3번 영역
-            </div>
-            <div className="bg-yellow-400 flex items-center justify-center">
-              4번 영역
+
+            {/* 아래쪽 1칸, 전체 너비 차지 */}
+            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl col-span-2">
+              {companies
+                .filter((c) => c.id === companyId)
+                .map((c) => {
+                  const stats = calculateCompanyStatistics(c, companies);
+
+                  return (
+                    <div key={c.id}>
+                      <HorizontalBarChart
+                        lastMonth={stats.lastMonth}
+                        prevMonth={stats.prevMonth}
+                        sameCompanyAverage={stats.sameCompanyAverage}
+                        otherAverage={stats.otherAverage}
+                      />
+                      <CompanyStatsBar companyName={c.name} stats={stats} />
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

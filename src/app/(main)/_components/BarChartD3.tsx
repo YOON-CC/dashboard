@@ -7,11 +7,13 @@ import { Company } from "@/lib/api";
 interface BarChartD3Props {
   companies: Company[];
   selectedCompanyId?: string | null;
+  isDetailPage?: boolean;
 }
 
 const BarChartD3: React.FC<BarChartD3Props> = ({
   companies,
   selectedCompanyId,
+  isDetailPage,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -83,7 +85,11 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-4"
+      className={`relative w-full h-full p-4 ${
+        !isDetailPage
+          ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl"
+          : ""
+      }`}
     >
       <svg ref={svgRef} width={dimensions.width} height={dimensions.height}>
         {/* X축 */}
