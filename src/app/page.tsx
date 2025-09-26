@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Leaf,
   AlertTriangle,
@@ -14,10 +14,27 @@ import {
   Users,
   Calendar,
 } from "lucide-react";
+import {
+  Company,
+  Country,
+  fetchCompanies,
+  fetchCountries,
+  fetchPosts,
+  Post,
+} from "@/lib/api";
 
 const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState("6months");
+
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  useEffect(() => {
+    fetchCompanies().then(setCompanies);
+    fetchCountries().then(setCountries);
+    fetchPosts().then(setPosts);
+  }, []);
 
   return (
     <div
@@ -27,12 +44,22 @@ const Dashboard = () => {
       }}
     >
       {/* 사이드패널 */}
+      <div className="bg-amber-400">
+        <h2>Companies</h2>
+        <pre>{JSON.stringify(companies, null, 2)}</pre>
+
+        <h2>Countries</h2>
+        <pre>{JSON.stringify(countries, null, 2)}</pre>
+
+        <h2>Posts</h2>
+        <pre>{JSON.stringify(posts, null, 2)}</pre>
+      </div>
       <div
         className={`fixed inset-y-0 left-0 z-50 w-64 transform ${
           isDrawerOpen ? "translate-x-0" : "-translate-x-64"
         } transition-transform duration-300 ease-in-out`}
       >
-        <div className="flex flex-col h-full backdrop-blur-[12px] bg-white/10 border-r border-white/20 shadow-2xl rounded-r-2xl">
+        <div className="flex flex-col h-full backdrop-blur-[12px] bg-black/30  border-r border-white/20 shadow-2xl rounded-r-2xl">
           <div className="flex items-center justify-between p-6">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center shadow-md">
@@ -79,7 +106,7 @@ const Dashboard = () => {
       {/* 메인 */}
       <div className="flex-1 flex flex-col min-w-0 p-6">
         {/* 헤더 */}
-        <header className="backdrop-blur-[8px] bg-white/10 border border-white/20 rounded-2xl px-6 py-4 flex items-center justify-between shadow-xl">
+        <header className="backdrop-blur-[8px] bg-black/30 border border-white/20 rounded-2xl px-3 py-2 flex items-center justify-between shadow-xl">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
@@ -124,7 +151,7 @@ const Dashboard = () => {
         </header>
 
         {/* 대시보드 콘텐츠 */}
-        <main className="flex-1 mt-6 flex flex-col">
+        <main className="flex-1 mt-6 flex flex-col backdrop-blur-[8px] bg-black/30 border border-white/20 rounded-3xl p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 왼족 */}
             <div className="lg:col-span-2 space-y-6">
