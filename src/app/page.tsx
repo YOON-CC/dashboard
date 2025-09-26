@@ -27,6 +27,7 @@ import {
 } from "@/lib/api";
 import LineChartD3 from "./dashboard/_components/BarChartD3";
 import { useRouter } from "next/navigation";
+import DonutChart from "./dashboard/_components/DountChart";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -572,7 +573,7 @@ const Dashboard = () => {
               {/* 상세 정보 카드 */}
               {selectedCompanyId && (
                 <div
-                  className="h-[400px] group bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden cursor-pointer hover:scale-101 hover:shadow-2xl transition-transform duration-300"
+                  className="h-[400px] group bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden cursor-pointer hover:scale-101 hover:shadow-2xl transition-transform duration-300"
                   onClick={() => router.push(`/detail/${selectedCompanyId}`)}
                 >
                   {/* 배경 장식 */}
@@ -601,21 +602,13 @@ const Dashboard = () => {
                       return (
                         <div
                           key={c.id}
-                          className="space-y-2 text-white/80 text-sm"
+                          className="flex flex-col items-center justify-center space-y-2"
                         >
-                          <div className="flex justify-between">
-                            <span>회사명</span>
-                            <span className="font-semibold">{c.name}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>총 배출량</span>
-                            <span className="font-semibold">{total} tCO2</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>최근 월 배출량</span>
-                            <span className="font-semibold">
-                              {lastMonth} tCO2
-                            </span>
+                          <DonutChart total={total} lastMonth={lastMonth} />
+                          <div className="space-y-1 text-white/80 text-sm text-center">
+                            <div>회사명: {c.name}</div>
+                            <div>총 배출량: {total} tCO2</div>
+                            <div>최근 월 배출량: {lastMonth} tCO2</div>
                           </div>
                         </div>
                       );
