@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Company, fetchCompanies } from "@/lib/api";
-import LineChartD3 from "../../dashboard/_components/BarChartD3";
+import LineChartD3 from "../../(main)/_components/BarChartD3";
 
 export default function CompanyDetailPage() {
   const params = useParams();
