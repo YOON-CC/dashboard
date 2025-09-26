@@ -5,9 +5,14 @@ import { Menu } from "lucide-react";
 interface HeaderProps {
   isDrawerOpen: boolean;
   setIsDrawerOpen: (open: boolean) => void;
+  isDetailPage?: string;
 }
 
-const Header = ({ isDrawerOpen, setIsDrawerOpen }: HeaderProps) => {
+const Header = ({
+  isDrawerOpen,
+  setIsDrawerOpen,
+  isDetailPage,
+}: HeaderProps) => {
   return (
     <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
       {/* 왼쪽: 메뉴 버튼 + 타이틀 */}
@@ -20,8 +25,12 @@ const Header = ({ isDrawerOpen, setIsDrawerOpen }: HeaderProps) => {
         </button>
 
         <div>
-          <h2 className="text-xl font-bold text-white">탄소 배출량 대시보드</h2>
-          <p className="text-white/60">실시간 환경 영향 모니터링 시스템</p>
+          <h2 className="text-xl font-bold text-white">
+            {isDetailPage ? isDetailPage : "탄소 배출량 대시보드"}
+          </h2>{" "}
+          <p className="text-white/60">
+            {isDetailPage ? "상세페이지" : "실시간 환경 영향 모니터링 시스템"}
+          </p>
         </div>
       </div>
 

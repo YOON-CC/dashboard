@@ -137,6 +137,41 @@ export const posts: Post[] = [
     dateTime: "2024-04",
     content: "Paris Energy CO2 reduction initiatives",
   },
+  {
+    id: "p6",
+    title: "Sustainability Report",
+    resourceUid: "c1",
+    dateTime: "2024-02",
+    content: "Quarterly CO2 update for Acme Corp",
+  },
+  {
+    id: "p7",
+    title: "Emission Overview",
+    resourceUid: "c2",
+    dateTime: "2024-03",
+    content: "Globex diesel consumption trends",
+  },
+  {
+    id: "p8",
+    title: "Quarterly Sustainability",
+    resourceUid: "c3",
+    dateTime: "2024-03",
+    content: "Apple KR emissions report",
+  },
+  {
+    id: "p9",
+    title: "Carbon Footprint Analysis",
+    resourceUid: "c5",
+    dateTime: "2024-04",
+    content: "Nippon Tech environmental impact summary",
+  },
+  {
+    id: "p10",
+    title: "Eco Report",
+    resourceUid: "c6",
+    dateTime: "2024-04",
+    content: "Paris Energy CO2 reduction initiatives",
+  },
 ];
 
 const _countries = [...countries];

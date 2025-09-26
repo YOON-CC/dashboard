@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Company, fetchCompanies } from "@/lib/api";
+import { Company, fetchCompanies, fetchPosts, Post } from "@/lib/api";
 import SidePanel from "@/components/layout/SidePanel";
 import Header from "@/components/layout/Header";
 import * as d3 from "d3";
@@ -21,8 +21,16 @@ export default function CompanyDetailPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [company, setCompany] = useState<Company | null>(null);
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
 
   const pieRef = useRef<SVGSVGElement | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  // 데이터 로딩
+  useEffect(() => {
+    fetchCompanies().then(setCompanies);
+    fetchPosts().then(setPosts);
+  }, []);
 
   useEffect(() => {
     fetchCompanies().then((data) => {
@@ -102,13 +110,108 @@ export default function CompanyDetailPage() {
           setShowDetailDropdown={setShowDetailDropdown}
           companies={companies}
         />
-        <Header isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
+        <Header
+          isDrawerOpen={isDrawerOpen}
+          setIsDrawerOpen={setIsDrawerOpen}
+          isDetailPage={company.name}
+        />
 
         <div className="h-[820px] flex gap-4">
           {/* 왼쪽: 회사 정보 */}
-          <div className="flex-1 bg-black/30 p-4 rounded-xl flex flex-col gap-4">
-            <h2 className="text-white text-2xl font-bold">{company.name}</h2>
-            <p className="text-white/80">Country: {company.country}</p>
+          <div className="flex-1 p-6 rounded-xl flex flex-col gap-6 shadow-inner">
+            {/* 회사 기본 정보 */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-green-500/50 flex items-center justify-center text-white text-2xl font-bold">
+                {company.name[0]}
+              </div>
+              <div>
+                <h2 className="text-white text-2xl font-bold">
+                  {company.name}
+                </h2>
+                <p className="text-white/80">Country: {company.country}</p>
+              </div>
+            </div>
+
+            {/* 핵심 배출 지표 */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  총 배출량
+                </h4>
+                <p className="text-green-400 text-xl font-bold">
+                  {company.emissions.reduce((sum, e) => sum + e.emissions, 0)}{" "}
+                  tCO₂
+                </p>
+              </div>
+              <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
+                <h4 className="text-white/90 text-sm font-semibold">
+                  평균 배출량
+                </h4>
+                <p className="text-blue-400 text-xl font-bold">
+                  {(
+                    company.emissions.reduce((sum, e) => sum + e.emissions, 0) /
+                    company.emissions.length
+                  ).toFixed(2)}{" "}
+                  tCO₂
+                </p>
+              </div>
+            </div>
+
+            {/* 최근 리포트 */}
+            <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80">
+              <h4 className="text-white font-semibold">최근 리포트</h4>
+              {posts
+                .filter((p) => p.resourceUid === company.id)
+                .sort((a, b) => (a.dateTime < b.dateTime ? 1 : -1))
+                .map((p) => (
+                  <div
+                    key={p.id}
+                    className="bg-black/30 p-2 rounded-md hover:bg-green-500/20 cursor-pointer transition"
+                    onClick={() =>
+                      setSelectedReportId((prev) =>
+                        prev === p.id ? null : p.id
+                      )
+                    }
+                  >
+                    <p className="font-semibold">{p.title}</p>
+                    <p className="text-xs text-white/60">{p.dateTime}</p>
+                    {/* 선택된 리포트 내용 표시 */}
+                    {selectedReportId === p.id && (
+                      <div className="bg-black/50 p-3 rounded-md text-white/80 text-sm mt-2">
+                        {p.content}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              {posts.filter((p) => p.resourceUid === company.id).length ===
+                0 && (
+                <p className="text-white/50 text-sm">리포트가 없습니다.</p>
+              )}
+            </div>
+
+            {/* 주요 배출원 */}
+            <div className="flex flex-col gap-2 text-white/80">
+              <p>
+                주요 배출원:{" "}
+                {company.emissions.sort((a, b) => b.emissions - a.emissions)[0]
+                  ?.source || "N/A"}
+              </p>
+              <p>
+                최근 배출월:{" "}
+                {
+                  company.emissions.sort((a, b) =>
+                    b.yearMonth.localeCompare(a.yearMonth)
+                  )[0]?.yearMonth
+                }
+              </p>
+            </div>
+
+            {/* 액션 버튼 */}
+            <div className="flex gap-2 mt-4">
+              <button className="flex-1 bg-green-500/70 hover:bg-green-400 transition rounded-lg py-2 text-white font-semibold">
+                Export Report
+              </button>
+            </div>
           </div>
 
           {/* 오른쪽 */}
