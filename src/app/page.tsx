@@ -32,6 +32,7 @@ import {
   fetchPosts,
   Post,
 } from "@/lib/api";
+import LineChartD3 from "./dashboard/_components/BarChartD3";
 
 const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -448,54 +449,10 @@ const Dashboard = () => {
                 </h3>
 
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={
-                        selectedCompanyId
-                          ? companies
-                              .find((c) => c.id === selectedCompanyId)
-                              ?.emissions.map((e) => ({
-                                month: e.yearMonth,
-                                emissions: e.emissions,
-                              })) || []
-                          : companies
-                              .map((c) =>
-                                c.emissions.map((e) => ({
-                                  month: e.yearMonth,
-                                  emissions: e.emissions,
-                                }))
-                              )
-                              .flat()
-                      }
-                      margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#ffffff30" />
-                      <XAxis
-                        dataKey="month"
-                        stroke="#ffffff80"
-                        tick={{ fill: "#ffffffaa" }}
-                      />
-                      <YAxis
-                        stroke="#ffffff80"
-                        tick={{ fill: "#ffffffaa" }}
-                        unit="tCO2"
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#00000080",
-                          border: "none",
-                        }}
-                        itemStyle={{ color: "#fff" }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="emissions"
-                        stroke="#60a5fa"
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <LineChartD3
+                    companies={companies}
+                    selectedCompanyId={selectedCompanyId}
+                  />
                 </div>
               </div>
 
