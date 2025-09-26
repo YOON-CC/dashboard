@@ -195,7 +195,7 @@ const Dashboard = () => {
                     <div className="w-16 h-0.5 bg-gradient-to-r from-purple-400 to-blue-500 mx-auto"></div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-purple-500/60 to-blue-500/60 backdrop-blur-xl rounded-3xl p-10 border border-white/30 shadow-2xl relative overflow-hidden">
+                  <div className="bg-gradient-to-br from-gray-500/60 to-black-500/60 backdrop-blur-xl rounded-3xl px-6 py-4 border border-white/30 shadow-2xl relative overflow-hidden">
                     {/* 배경 장식 */}
 
                     <div className="relative z-10">
@@ -213,11 +213,19 @@ const Dashboard = () => {
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                          <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-sm">
+                          <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-sm">
                             전체 배출량
                           </h3>
                           <p className="text-white/80 text-2xl font-semibold mb-1">
-                            {totalEmissionsAll}{" "}
+                            {companies.reduce(
+                              (sum, company) =>
+                                sum +
+                                company.emissions.reduce(
+                                  (s, e) => s + e.emissions,
+                                  0
+                                ),
+                              0
+                            )}{" "}
                             <span className="text-lg font-normal">tCO2</span>
                           </p>
                         </div>
@@ -227,7 +235,18 @@ const Dashboard = () => {
                             예상 탄소세
                           </p>
                           <p className="text-white font-bold text-xl">
-                            ${(totalEmissionsAll * 50).toLocaleString()}
+                            $
+                            {(
+                              companies.reduce(
+                                (sum, company) =>
+                                  sum +
+                                  company.emissions.reduce(
+                                    (s, e) => s + e.emissions,
+                                    0
+                                  ),
+                                0
+                              ) * 50
+                            ).toLocaleString()}
                           </p>
                         </div>
 
