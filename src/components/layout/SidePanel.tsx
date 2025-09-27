@@ -129,7 +129,7 @@ const SidePanel = ({
                   key={idx}
                   className={`w-10 h-10 rounded-lg bg-cover bg-center border border-borderCustom hover:scale-105 transition-transform`}
                   style={{
-                    backgroundImage: `url(/images/${bg}.jpg)`,
+                    backgroundImage: `url(/images/${bg}.webp)`,
                   }}
                   onClick={() => {
                     localStorage.setItem("dashboardBg", bg);

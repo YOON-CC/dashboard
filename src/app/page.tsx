@@ -86,7 +86,7 @@ const Dashboard = () => {
     <div
       className="flex min-h-screen relative overflow-hidden bg-cover bg-center p-6 items-center justify-center"
       style={{
-        backgroundImage: `url('/images/${bg}.jpg')`,
+        backgroundImage: `url('/images/${bg}.webp')`,
       }}
     >
       {/* 메인 */}

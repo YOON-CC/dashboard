@@ -1,16 +1,8 @@
 "use client";
 
+import { Company } from "@/lib/types";
 import { Users } from "lucide-react";
-
-interface Emission {
-  emissions: number;
-}
-
-interface Company {
-  id: string;
-  name: string;
-  emissions: Emission[];
-}
+import { useMemo } from "react";
 
 interface GlobalOverviewProps {
   companies: Company[];
@@ -18,14 +10,15 @@ interface GlobalOverviewProps {
 
 const GlobalOverview = ({ companies }: GlobalOverviewProps) => {
   // 전체 배출량
-  const totalEmissions = companies.reduce(
-    (sum, company) =>
-      sum + company.emissions.reduce((s, e) => s + e.emissions, 0),
-    0
-  );
+  const totalEmissions = useMemo(() => {
+    return companies.reduce(
+      (sum, c) => sum + c.emissions.reduce((s, e) => s + e.emissions, 0),
+      0
+    );
+  }, [companies]);
 
   // 예상 탄소세 (배출량 * 50)
-  const estimatedTax = totalEmissions * 50;
+  const estimatedTax = useMemo(() => totalEmissions * 50, [totalEmissions]);
 
   return (
     <div className="lg:col-span-2">

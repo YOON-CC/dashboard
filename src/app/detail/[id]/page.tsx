@@ -86,7 +86,7 @@ export default function CompanyDetailPage() {
     <div
       className="flex min-h-screen overflow-hidden bg-cover bg-center p-3 sm:p-6 items-center justify-center"
       style={{
-        backgroundImage: `url('/images/${bg}.jpg')`,
+        backgroundImage: `url('/images/${bg}.webp')`,
       }}
     >
       <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-primaryBg border border-borderCustom shadow-2xl overflow-hidden p-2 sm:p-3">
