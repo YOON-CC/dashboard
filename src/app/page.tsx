@@ -65,11 +65,28 @@ const Dashboard = () => {
     setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
 
+  const [bg, setBg] = useState("");
+
+  useEffect(() => {
+    const storedBg = localStorage.getItem("dashboardBg");
+    if (storedBg) setBg(storedBg);
+
+    const handler = () => {
+      const newBg = localStorage.getItem("dashboardBg");
+      if (newBg) setBg(newBg);
+    };
+    window.addEventListener("dashboardBgChange", handler);
+
+    return () => {
+      window.removeEventListener("dashboardBgChange", handler);
+    };
+  }, []);
+
   return (
     <div
       className="flex min-h-screen relative overflow-hidden bg-cover bg-center p-6 items-center justify-center"
       style={{
-        backgroundImage: "url('/images/dashboard-bg.jpg')",
+        backgroundImage: `url('/images/${bg}.jpg')`,
       }}
     >
       {/* 메인 */}

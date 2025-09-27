@@ -64,10 +64,30 @@ export default function CompanyDetailPage() {
     exportReport(selectedReport);
   };
 
+  // 배경 유틸
+  const [bg, setBg] = useState("");
+
+  useEffect(() => {
+    const storedBg = localStorage.getItem("dashboardBg");
+    if (storedBg) setBg(storedBg);
+
+    const handler = () => {
+      const newBg = localStorage.getItem("dashboardBg");
+      if (newBg) setBg(newBg);
+    };
+    window.addEventListener("dashboardBgChange", handler);
+
+    return () => {
+      window.removeEventListener("dashboardBgChange", handler);
+    };
+  }, []);
+
   return (
     <div
       className="flex min-h-screen overflow-hidden bg-cover bg-center p-3 sm:p-6 items-center justify-center"
-      style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
+      style={{
+        backgroundImage: `url('/images/${bg}.jpg')`,
+      }}
     >
       <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-primaryBg border border-borderCustom shadow-2xl overflow-hidden p-2 sm:p-3">
         <SidePanel

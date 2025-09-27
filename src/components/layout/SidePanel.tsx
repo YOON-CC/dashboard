@@ -115,6 +115,30 @@ const SidePanel = ({
               </div>
             )}
           </div>
+          <div className="p-4 border-t border-borderCustom">
+            <h2 className="text-sm text-gray-400 mb-2">Background</h2>
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                "dashboard-bg1",
+                "dashboard-bg2",
+                "dashboard-bg3",
+                "dashboard-bg4",
+                "dashboard-bg5",
+              ].map((bg, idx) => (
+                <button
+                  key={idx}
+                  className={`w-10 h-10 rounded-lg bg-cover bg-center border border-borderCustom hover:scale-105 transition-transform`}
+                  style={{
+                    backgroundImage: `url(/images/${bg}.jpg)`,
+                  }}
+                  onClick={() => {
+                    localStorage.setItem("dashboardBg", bg);
+                    window.dispatchEvent(new Event("dashboardBgChange"));
+                  }}
+                />
+              ))}
+            </div>
+          </div>
         </nav>
       </div>
     </div>
