@@ -13,6 +13,7 @@ import CompanyStatsBar from "@/app/(main)/_ui/CompanyStatsBar";
 import { calculateCompanyStatistics } from "@/app/(main)/utils/statistics";
 import { Company, Post } from "@/lib/types";
 import { exportReport } from "./_utils/exportUtils";
+import SkeletonReportCard from "./_ui/ReportCardSkeleton";
 
 export default function CompanyDetailPage() {
   // 라우팅 파라미터
@@ -20,6 +21,7 @@ export default function CompanyDetailPage() {
   const companyId = params.id;
 
   // 상태
+  const [isLoading, setIsLoading] = useState(true);
   const [showDetailDropdown, setShowDetailDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -32,6 +34,12 @@ export default function CompanyDetailPage() {
     fetchCompanies().then(setCompanies);
     fetchPosts().then(setPosts);
   }, []);
+
+  useEffect(() => {
+    if (posts !== null) {
+      setIsLoading(false);
+    }
+  }, [posts]);
 
   // 선택된 company 설정
   useEffect(() => {
@@ -164,10 +172,17 @@ export default function CompanyDetailPage() {
               <h4 className="text-white font-semibold text-sm sm:text-base">
                 최근 리포트
               </h4>
-              {posts
-                .filter((p) => p.resourceUid === company?.id)
-                .sort((a, b) => (a.dateTime < b.dateTime ? 1 : -1))
-                .map((p) => (
+
+              {/* 로딩 중일 때 */}
+              {isLoading &&
+                Array.from({ length: 2 }).map((_, idx) => (
+                  <SkeletonReportCard key={idx} />
+                ))}
+
+              {/* 로딩 끝나고 데이터 있을 때 */}
+              {!isLoading &&
+                companyPosts.length > 0 &&
+                companyPosts.map((p) => (
                   <div
                     key={p.id}
                     className="bg-black/30 p-2 rounded-md hover:bg-green-500/20 cursor-pointer transition"
@@ -188,8 +203,9 @@ export default function CompanyDetailPage() {
                     )}
                   </div>
                 ))}
-              {posts.filter((p) => p.resourceUid === company?.id).length ===
-                0 && (
+
+              {/* 로딩 끝나고 데이터 없을 때 */}
+              {!isLoading && companyPosts.length === 0 && (
                 <p className="text-white/50 text-xs sm:text-sm">
                   리포트가 없습니다.
                 </p>

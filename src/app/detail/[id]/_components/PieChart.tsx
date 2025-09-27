@@ -155,7 +155,7 @@ export default function PieChart({ data }: PieChartProps) {
   if (!data || data.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <p className="text-white/60 text-sm">데이터가 없습니다.</p>
+        <p className="text-white/60 text-sm">Loading...</p>
       </div>
     );
   }
