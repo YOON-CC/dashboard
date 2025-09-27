@@ -6,24 +6,26 @@ import { fetchCompanies, fetchPosts } from "@/lib/api";
 import SidePanel from "@/components/layout/SidePanel";
 import Header from "@/components/layout/Header";
 import * as d3 from "d3";
-import PieChart from "./components/PieChart";
+import PieChart from "./_components/PieChart";
 import BarChartD3 from "@/components/d3/BarChartD3";
 import HorizontalBarChart from "@/components/d3/HorizontalBarChart";
 import CompanyStatsBar from "@/app/(main)/_ui/CompanyStatsBar";
 import { calculateCompanyStatistics } from "@/app/(main)/utils/statistics";
 import { Company, Post } from "@/lib/types";
+import { exportReport } from "./_utils/exportUtils";
+
 export default function CompanyDetailPage() {
+  // 라우팅 파라미터
   const params = useParams();
   const companyId = params.id;
 
+  // 상태
   const [showDetailDropdown, setShowDetailDropdown] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [company, setCompany] = useState<Company | null>(null);
-  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
-
-  const pieRef = useRef<SVGSVGElement | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
 
   // 데이터 로딩
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function CompanyDetailPage() {
     fetchPosts().then(setPosts);
   }, []);
 
+  // 선택된 company 설정
   useEffect(() => {
     fetchCompanies().then((data) => {
       setCompanies(data);
@@ -39,61 +42,7 @@ export default function CompanyDetailPage() {
     });
   }, [companyId]);
 
-  // D3 원형 그래프
-  useEffect(() => {
-    if (!company || !pieRef.current) return;
-
-    const svg = d3.select(pieRef.current);
-    svg.selectAll("*").remove();
-
-    const width = 400;
-    const height = 400;
-    const radius = Math.min(width, height) / 2;
-
-    const g = svg
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
-
-    // source별 총 배출량 계산
-    const totalBySource = d3.rollup(
-      company.emissions,
-      (v) => d3.sum(v, (d) => d.emissions),
-      (d) => d.source
-    );
-
-    const data = Array.from(totalBySource, ([source, value]) => ({
-      source,
-      value,
-    }));
-
-    const color: Record<string, string> = {
-      gasoline: "#facc15",
-      diesel: "#4ade80",
-      lpg: "#38bdf8",
-      electric: "#f472b6",
-    };
-
-    const pie = d3
-      .pie<{ source: string; value: number }>()
-      .value((d) => d.value);
-    const arc = d3
-      .arc<d3.PieArcDatum<{ source: string; value: number }>>()
-      .innerRadius(0)
-      .outerRadius(radius);
-
-    g.selectAll("path")
-      .data(pie(data))
-      .join("path")
-      .attr("d", arc)
-      .attr("fill", (d) => color[d.data.source] || "#888")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 1)
-      .append("title")
-      .text((d) => `${d.data.source}: ${d.data.value}`);
-  }, [company]);
-
+  // 데이터 가공
   const companyPosts = posts
     .filter((p) => p.resourceUid === company?.id)
     .sort((a, b) => (a.dateTime < b.dateTime ? 1 : -1));
@@ -101,23 +50,11 @@ export default function CompanyDetailPage() {
   const selectedReport =
     companyPosts.find((p) => p.id === selectedReportId) || null;
 
+  // 유틸
   const handleExport = () => {
     if (!selectedReport) return;
-
-    const blob = new Blob([selectedReport.content], {
-      type: "text/plain;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${selectedReport.title}.txt`;
-    link.click();
-
-    URL.revokeObjectURL(url);
+    exportReport(selectedReport);
   };
-
-  if (!company) return <div>Loading...</div>;
 
   return (
     <div
@@ -135,7 +72,7 @@ export default function CompanyDetailPage() {
         <Header
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
-          isDetailPage={company.name}
+          isDetailPage={company?.name}
         />
 
         <div className="h-[820px] flex gap-4">
@@ -144,13 +81,13 @@ export default function CompanyDetailPage() {
             {/* 회사 기본 정보 */}
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-green-500/50 flex items-center justify-center text-white text-2xl font-bold">
-                {company.name[0]}
+                {company?.name[0]}
               </div>
               <div>
                 <h2 className="text-white text-2xl font-bold">
-                  {company.name}
+                  {company?.name}
                 </h2>
-                <p className="text-white/80">Country: {company.country}</p>
+                <p className="text-white/80">Country: {company?.country}</p>
               </div>
             </div>
 
@@ -161,7 +98,7 @@ export default function CompanyDetailPage() {
                   총 배출량
                 </h4>
                 <p className="text-green-400 text-xl font-bold">
-                  {company.emissions.reduce((sum, e) => sum + e.emissions, 0)}{" "}
+                  {company?.emissions.reduce((sum, e) => sum + e.emissions, 0)}{" "}
                   tCO₂
                 </p>
               </div>
@@ -170,10 +107,13 @@ export default function CompanyDetailPage() {
                   평균 배출량
                 </h4>
                 <p className="text-blue-400 text-xl font-bold">
-                  {(
-                    company.emissions.reduce((sum, e) => sum + e.emissions, 0) /
-                    company.emissions.length
-                  ).toFixed(2)}{" "}
+                  {company &&
+                    (
+                      company.emissions.reduce(
+                        (sum, e) => sum + e.emissions,
+                        0
+                      ) / company.emissions.length
+                    ).toFixed(2)}{" "}
                   tCO₂
                 </p>
               </div>
@@ -184,7 +124,7 @@ export default function CompanyDetailPage() {
                   최근 배출월
                 </h4>
                 <p className="text-white text-lg font-semibold">
-                  {company.emissions.sort((a, b) =>
+                  {company?.emissions.sort((a, b) =>
                     b.yearMonth.localeCompare(a.yearMonth)
                   )[0]?.yearMonth || "N/A"}
                 </p>
@@ -194,7 +134,7 @@ export default function CompanyDetailPage() {
                   주요 배출원
                 </h4>
                 <p className="text-pink-400 text-lg font-semibold">
-                  {company.emissions.sort(
+                  {company?.emissions.sort(
                     (a, b) => b.emissions - a.emissions
                   )[0]?.source || "N/A"}
                 </p>
@@ -204,7 +144,7 @@ export default function CompanyDetailPage() {
                   배출원 수
                 </h4>
                 <p className="text-yellow-400 text-lg font-semibold">
-                  {new Set(company.emissions.map((e) => e.source)).size}
+                  {new Set(company?.emissions.map((e) => e.source)).size}
                 </p>
               </div>
               <div className="bg-black/50 rounded-lg p-3 flex flex-col items-center">
@@ -212,7 +152,7 @@ export default function CompanyDetailPage() {
                   리포트 수
                 </h4>
                 <p className="text-teal-400 text-lg font-semibold">
-                  {posts.filter((p) => p.resourceUid === company.id).length}
+                  {posts.filter((p) => p.resourceUid === company?.id).length}
                 </p>
               </div>
             </div>
@@ -221,7 +161,7 @@ export default function CompanyDetailPage() {
             <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80 max-h-[400px] overflow-auto">
               <h4 className="text-white font-semibold">최근 리포트</h4>
               {posts
-                .filter((p) => p.resourceUid === company.id)
+                .filter((p) => p.resourceUid === company?.id)
                 .sort((a, b) => (a.dateTime < b.dateTime ? 1 : -1))
                 .map((p) => (
                   <div
@@ -243,7 +183,7 @@ export default function CompanyDetailPage() {
                     )}
                   </div>
                 ))}
-              {posts.filter((p) => p.resourceUid === company.id).length ===
+              {posts.filter((p) => p.resourceUid === company?.id).length ===
                 0 && (
                 <p className="text-white/50 text-sm">리포트가 없습니다.</p>
               )}
@@ -271,14 +211,18 @@ export default function CompanyDetailPage() {
             <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl">
               <h3 className="text-white text-xl font-bold mb-2">배출 원천</h3>
               <PieChart
-                data={Array.from(
-                  d3.rollup(
-                    company.emissions,
-                    (v) => d3.sum(v, (d) => d.emissions),
-                    (d) => d.source
-                  ),
-                  ([source, value]) => ({ source, value })
-                )}
+                data={
+                  company
+                    ? Array.from(
+                        d3.rollup(
+                          company.emissions,
+                          (v) => d3.sum(v, (d) => d.emissions),
+                          (d) => d.source
+                        ),
+                        ([source, value]) => ({ source, value })
+                      )
+                    : []
+                }
               />
             </div>
 
