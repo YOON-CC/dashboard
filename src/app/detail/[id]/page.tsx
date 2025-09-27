@@ -69,7 +69,7 @@ export default function CompanyDetailPage() {
       className="flex min-h-screen overflow-hidden bg-cover bg-center p-3 sm:p-6 items-center justify-center"
       style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
     >
-      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-hidden p-2 sm:p-3">
+      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-primaryBg border border-borderCustom shadow-2xl overflow-hidden p-2 sm:p-3">
         <SidePanel
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
@@ -88,7 +88,7 @@ export default function CompanyDetailPage() {
           <div className="flex-1 lg:flex-none lg:w-1/2 p-3 sm:p-6 rounded-xl flex flex-col gap-4 sm:gap-6 shadow-inner">
             {/* 회사 기본 정보 */}
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-green-500/50 flex items-center justify-center text-white text-lg sm:text-2xl font-bold">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-point flex items-center justify-center text-white text-lg sm:text-2xl font-bold">
                 {company?.name[0]}
               </div>
               <div>
@@ -103,7 +103,7 @@ export default function CompanyDetailPage() {
 
             {/* 핵심 배출 지표 */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   총 배출량
                 </h4>
@@ -112,7 +112,7 @@ export default function CompanyDetailPage() {
                   <span className="text-xs sm:text-base">tCO₂</span>
                 </p>
               </div>
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   평균 배출량
                 </h4>
@@ -129,7 +129,7 @@ export default function CompanyDetailPage() {
               </div>
 
               {/* 추가 정보 */}
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   최근 배출월
                 </h4>
@@ -139,7 +139,7 @@ export default function CompanyDetailPage() {
                   )[0]?.yearMonth || "N/A"}
                 </p>
               </div>
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   주요 배출원
                 </h4>
@@ -149,7 +149,7 @@ export default function CompanyDetailPage() {
                   )[0]?.source || "N/A"}
                 </p>
               </div>
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   배출원 수
                 </h4>
@@ -157,7 +157,7 @@ export default function CompanyDetailPage() {
                   {new Set(company?.emissions.map((e) => e.source)).size}
                 </p>
               </div>
-              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center">
+              <div className="bg-black/50 rounded-lg p-2 sm:p-3 flex flex-col items-center border border-borderCustom">
                 <h4 className="text-white/90 text-xs sm:text-sm font-semibold text-center">
                   리포트 수
                 </h4>
@@ -168,7 +168,7 @@ export default function CompanyDetailPage() {
             </div>
 
             {/* 최근 리포트 */}
-            <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80 max-h-[300px] lg:max-h-[400px] overflow-auto">
+            <div className="bg-black/40 p-3 rounded-lg flex flex-col gap-2 text-white/80 max-h-[300px] lg:max-h-[400px] overflow-auto border border-borderCustom">
               <h4 className="text-white font-semibold text-sm sm:text-base">
                 최근 리포트
               </h4>
@@ -215,7 +215,7 @@ export default function CompanyDetailPage() {
             {/* 액션 버튼 */}
             <div className="mt-auto flex gap-2">
               <button
-                className={`flex-1 py-2 sm:py-3 rounded-lg font-semibold text-white text-sm sm:text-base transition ${
+                className={`flex-1 py-2 sm:py-3 rounded-lg font-semibold text-white text-sm sm:text-base transition border border-borderCustom ${
                   selectedReport
                     ? "bg-green-500/70 hover:bg-green-400 cursor-pointer"
                     : "bg-black/20 cursor-not-allowed"
@@ -231,7 +231,7 @@ export default function CompanyDetailPage() {
           {/* 오른쪽 차트 영역 */}
           <div className="flex-1 lg:flex-none lg:w-1/2 grid grid-cols-1 lg:grid-cols-2 grid-rows-1 lg:grid-rows-2 gap-4 h-auto lg:h-full p-2 sm:p-4 rounded-xl">
             {/* 파이 차트 */}
-            <div className="bg-black/30 flex flex-col rounded-2xl p-4 min-h-0 overflow-hidden">
+            <div className="bg-black/30 flex flex-col rounded-2xl p-4 min-h-0 overflow-hidden border border-borderCustom">
               <h3 className="text-white text-lg sm:text-xl font-bold mb-2 flex-shrink-0 text-center">
                 배출 원천
               </h3>
@@ -254,7 +254,7 @@ export default function CompanyDetailPage() {
             </div>
 
             {/* 바 차트 */}
-            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl p-4 min-h-[200px] lg:min-h-0">
+            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl p-4 min-h-[200px] lg:min-h-0 border border-borderCustom">
               <div className="w-full h-full">
                 <BarChartD3
                   companies={companies}
@@ -265,7 +265,7 @@ export default function CompanyDetailPage() {
             </div>
 
             {/* 가로 바 차트 - 전체 너비 차지 */}
-            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl lg:col-span-2 p-4 min-h-[250px] lg:min-h-0">
+            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl lg:col-span-2 p-4 min-h-[250px] lg:min-h-0 border border-borderCustom">
               {companies
                 .filter((c) => c.id === companyId)
                 .map((c) => {

@@ -11,12 +11,12 @@ export default function CompanyCardSkeleton() {
       <div className="h-4 w-32 bg-white/30 rounded"></div>
 
       <div className="space-y-2">
-        <div className="h-3 w-full bg-white/20 rounded"></div>
+        <div className="h-3 w-full bg-borderCustom rounded"></div>
       </div>
 
       <div className="space-y-1 h-24 flex flex-col justify-around">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-3 w-full bg-white/20 rounded"></div>
+          <div key={i} className="h-3 w-full bg-borderCustom rounded"></div>
         ))}
       </div>
     </div>

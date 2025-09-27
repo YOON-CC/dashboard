@@ -73,7 +73,7 @@ const Dashboard = () => {
       }}
     >
       {/* 메인 */}
-      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-auto p-3">
+      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-primaryBg border border-borderCustom shadow-2xl overflow-auto p-3">
         {/* 사이드패널 */}
         <SidePanel
           isDrawerOpen={isDrawerOpen}
@@ -87,7 +87,7 @@ const Dashboard = () => {
         <Header isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
 
         {/* 대시보드 콘텐츠 */}
-        <main className="flex-1 mt-3 flex flex-col backdrop-blur-[8px] bg-black/10 border border-white/20 rounded-3xl p-4">
+        <main className="flex-1 mt-3 flex flex-col backdrop-blur-[8px] bg-primaryBg border border-borderCustom rounded-3xl p-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* 왼족 contents*/}
             <div className="lg:col-span-2 space-y-6">
@@ -111,10 +111,10 @@ const Dashboard = () => {
             {/* 오른쪽 contents*/}
             <div className="flex flex-col justify-between h-full">
               {/* 월별 배출량 */}
-              <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden">
+              <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-borderCustom shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl"></div>
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <TrendingUp className="w-5 h-5 text-point" />
                   월별 배출량
                 </h3>
                 <div className="h-64">
@@ -128,7 +128,7 @@ const Dashboard = () => {
               {/* 상세 정보 카드 */}
               {selectedCompanyId && (
                 <div
-                  className="h-[400px] group bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-white/20 shadow-2xl relative overflow-hidden cursor-pointer hover:scale-101 hover:shadow-2xl transition-transform duration-300"
+                  className="h-[400px] group bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl p-6 border border-borderCustom shadow-2xl relative overflow-hidden cursor-pointer hover:scale-101 hover:shadow-2xl transition-transform duration-300"
                   onClick={() => router.push(`/detail/${selectedCompanyId}`)}
                 >
                   {/* 배경 장식 */}

@@ -37,12 +37,12 @@ const SidePanel = ({
         isDrawerOpen ? "translate-x-0" : "-translate-x-64"
       } transition-transform duration-300 ease-in-out`}
     >
-      <div className="flex flex-col h-full bg-black border-r border-white/20 shadow-2xl rounded-r-2xl">
+      <div className="flex flex-col h-full bg-black border-r border-borderCustom shadow-2xl rounded-r-2xl">
         {/* 상단 헤더 */}
         <div className="flex items-center justify-between p-6">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center shadow-md">
-              <Leaf className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-point to-white flex items-center justify-center shadow-md">
+              <Leaf className="w-6 h-6 text-black" />
             </div>
             <h1 className="text-xl font-bold text-white">Dashboard</h1>
           </div>
@@ -65,7 +65,7 @@ const SidePanel = ({
             onClick={() => router.push("/")}
             className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
               isHomePage
-                ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
+                ? "bg-gradient-to-r from-point to-white text-white border border-borderCustom shadow-inner"
                 : "text-gray-300 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -79,7 +79,7 @@ const SidePanel = ({
               onClick={() => setShowDetailDropdown((prev) => !prev)}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                 showDetailDropdown || isDetailPage
-                  ? "bg-gradient-to-r from-purple-500/30 to-blue-500/30 text-white border border-white/20 shadow-inner"
+                  ? "bg-gradient-to-r from-point to-white text-white border border-borderCustom shadow-inner"
                   : "text-gray-300 hover:bg-white/10 hover:text-white"
               }`}
             >
@@ -95,7 +95,7 @@ const SidePanel = ({
             </button>
 
             {showDetailDropdown && (
-              <div className="absolute left-0 top-full mt-1 w-full bg-black/40 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg z-50">
+              <div className="absolute left-0 top-full mt-1 w-full bg-black/40 backdrop-blur-md rounded-2xl border border-borderCustom shadow-lg z-50">
                 {companies.map((c) => (
                   <button
                     key={c.id}
@@ -105,7 +105,7 @@ const SidePanel = ({
                     }}
                     className={`w-full text-left px-4 py-2 rounded-xl transition-colors ${
                       c.id === currentCompanyId
-                        ? "bg-purple-500/30 text-white"
+                        ? "bg-point text-white"
                         : "text-gray-300 hover:bg-white/10 hover:text-white"
                     }`}
                   >

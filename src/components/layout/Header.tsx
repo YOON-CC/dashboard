@@ -14,7 +14,7 @@ const Header = ({
   isDetailPage,
 }: HeaderProps) => {
   return (
-    <header className="backdrop-blur-[12px] bg-black/10 border border-white/20 rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
+    <header className="backdrop-blur-[12px] bg-primaryBg border border-borderCustom rounded-2xl px-6 py-3 flex items-center justify-between shadow-2xl">
       {/* 왼쪽: 메뉴 버튼 + 타이틀 */}
       <div className="flex items-center space-x-4">
         <button
@@ -36,8 +36,8 @@ const Header = ({
 
       {/* 오른쪽: 유저 아바타 */}
       <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-purple-400 to-blue-500 flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-lg">A</span>
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-r from-point to-white flex items-center justify-center shadow-lg">
+          <span className="text-black font-bold text-lg">A</span>
         </div>
       </div>
     </header>

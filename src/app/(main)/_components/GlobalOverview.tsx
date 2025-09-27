@@ -32,22 +32,22 @@ const GlobalOverview = ({ companies }: GlobalOverviewProps) => {
       {/* 섹션 타이틀 */}
       <div className="mb-3">
         <h2 className="text-xl font-bold text-white/90 mb-2">전체 현황</h2>
-        <div className="w-20 h-1 bg-gradient-to-r from-white to-green-400"></div>
+        <div className="w-20 h-1 bg-gradient-to-r from-white to-point"></div>
       </div>
 
       {/* 카드 */}
-      <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl px-6 py-4 border border-white/30 shadow-2xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl rounded-3xl px-6 py-4 border border-borderCustom shadow-2xl relative overflow-hidden">
         <div className="relative z-10">
           {/* 헤더 */}
           <div className="flex items-center justify-between mb-6">
-            <div className="bg-white/20 rounded-2xl p-3 backdrop-blur-sm">
+            <div className="bg-borderCustom rounded-2xl p-3 backdrop-blur-sm">
               <Users className="w-8 h-8 text-white drop-shadow-sm" />
             </div>
             <div className="text-right">
               <span className="text-white/70 text-sm font-medium">
                 Global Overview
               </span>
-              <div className="w-2 h-2 bg-green-400 rounded-full ml-auto mt-1 animate-pulse"></div>
+              <div className="w-2 h-2 bg-point rounded-full ml-auto mt-1 animate-pulse"></div>
             </div>
           </div>
 
@@ -65,7 +65,7 @@ const GlobalOverview = ({ companies }: GlobalOverviewProps) => {
             </div>
 
             {/* 예상 탄소세 */}
-            <div className="border-l border-white/20 pl-6">
+            <div className="border-l border-borderCustom pl-6">
               <p className="text-white/70 text-sm mb-1">예상 탄소세</p>
               <p className="text-white font-bold text-xl">
                 ${estimatedTax.toLocaleString()}
@@ -73,7 +73,7 @@ const GlobalOverview = ({ companies }: GlobalOverviewProps) => {
             </div>
 
             {/* 자회사 수 */}
-            <div className="border-l border-white/20 pl-6">
+            <div className="border-l border-borderCustom pl-6">
               <p className="text-white/70 text-sm mb-1">자회사 수</p>
               <p className="text-white font-bold text-xl">
                 {companies.length}개 회사

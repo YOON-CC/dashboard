@@ -75,7 +75,7 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
         ref={containerRef}
         className={`w-full h-full flex items-center justify-center p-4 ${
           !isDetailPage
-            ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl"
+            ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-borderCustom shadow-2xl"
             : ""
         }`}
       >
@@ -83,7 +83,7 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
-              className="flex-1 h-32 bg-white/20 rounded-lg animate-pulse"
+              className="flex-1 h-32 bg-borderCustom rounded-lg animate-pulse"
             />
           ))}
         </div>
@@ -109,7 +109,7 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
       ref={containerRef}
       className={`relative w-full h-full p-4 ${
         !isDetailPage
-          ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl"
+          ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-borderCustom shadow-2xl"
           : ""
       }`}
     >

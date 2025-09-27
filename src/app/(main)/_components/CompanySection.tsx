@@ -57,14 +57,14 @@ const CompanySection = ({
           <h2 className="text-xl font-bold text-white/90 mb-2">
             자회사별 현황
           </h2>
-          <div className="w-28 h-1 bg-gradient-to-r from-white to-green-400"></div>
+          <div className="w-28 h-1 bg-gradient-to-r from-white to-point"></div>
         </div>
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="회사명 검색"
-          className="w-[150px] p-2 pl-3 rounded-lg bg-black/20 text-white placeholder-white/50 border border-white/20 backdrop-blur-sm"
+          className="w-[150px] p-2 pl-3 rounded-lg bg-black/20 text-white placeholder-white/50 border border-borderCustom backdrop-blur-sm"
         />
       </div>
 
@@ -72,13 +72,13 @@ const CompanySection = ({
       <div className="relative">
         <button
           onClick={scrollLeftFn}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-borderCustom rounded-full p-2 transition-all duration-300 shadow-lg"
         >
           <ChevronLeft className="w-5 h-5 text-white" />
         </button>
         <button
           onClick={scrollRightFn}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full p-2 transition-all duration-300 shadow-lg"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-md hover:bg-borderCustom rounded-full p-2 transition-all duration-300 shadow-lg"
         >
           <ChevronRight className="w-5 h-5 text-white" />
         </button>
@@ -171,12 +171,12 @@ const CompanySection = ({
               .map((post) => (
                 <div
                   key={post.id}
-                  className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-fit bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-white/20"
+                  className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-fit bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-borderCustom"
                 >
                   {/* 상단 아이콘과 타이틀 */}
                   <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                      <span className="text-white font-semibold text-sm">
+                    <div className="w-10 h-10 bg-gradient-to-r from-point to-white rounded-full flex items-center justify-center">
+                      <span className="text-black font-semibold text-sm">
                         {post.title.charAt(0)}
                       </span>
                     </div>
