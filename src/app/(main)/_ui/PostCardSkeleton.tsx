@@ -14,7 +14,6 @@ export default function PostCardSkeleton() {
       <div className="flex flex-col justify-end gap-2">
         <div className="h-3 w-full bg-white/20 rounded"></div>
         <div className="h-3 w-5/6 bg-white/20 rounded"></div>
-        <div className="h-5 w-16 bg-blue-500/30 rounded-full mt-2"></div>
       </div>
     </div>
   );

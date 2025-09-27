@@ -76,13 +76,7 @@ export default function PieChart({ data }: PieChartProps) {
       .style("opacity", 0.8);
 
     // 애니메이션
-    arcs
-      .transition()
-      .duration(800)
-      .attrTween("d", function (d) {
-        const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
-        return (t) => arc(i(t))!;
-      });
+    arcs.attr("d", (d) => arc(d)!);
 
     // 라벨
     if (radius > 40) {

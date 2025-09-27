@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react";
-import CompanySectionSkeleton from "../_ui/CompanySectionSkeleton";
 import CompanyCardSkeleton from "../_ui/CompanySectionSkeleton";
 import PostCardSkeleton from "../_ui/PostCardSkeleton";
 
@@ -43,6 +42,13 @@ const CompanySection = ({
     }
   };
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 예시: companies 데이터가 들어오면 로딩 종료
+  useEffect(() => {
+    if (filteredCompanies.length > 0) setIsLoading(false);
+  }, [filteredCompanies]);
+
   return (
     <div className="lg:col-span-2">
       {/* 헤더 */}
@@ -78,73 +84,78 @@ const CompanySection = ({
         </button>
 
         <div ref={scrollRef} className="flex gap-6 pb-4 overflow-x-hidden p-2">
-          {filteredCompanies && filteredCompanies.length > 0
-            ? filteredCompanies.map((company, idx) => {
-                const { totalEmissions, monthlyData } =
-                  parseCompanyEmissions(company);
-                const isActive = selectedCompanyId === company.id;
+          {filteredCompanies.length > 0 ? (
+            filteredCompanies.map((company) => {
+              const { totalEmissions, monthlyData } =
+                parseCompanyEmissions(company);
+              const isActive = selectedCompanyId === company.id;
 
-                return (
-                  <div
-                    key={company.id}
-                    onClick={() => handleCompanyClick(company.id)}
-                    className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl shadow-lg transition-all duration-300 group relative overflow-hidden hover:shadow-2xl hover:scale-105 cursor-pointer
-                    ${
-                      isActive
-                        ? `border-2 border-white`
-                        : `border border-slate-700/60`
-                    }`}
-                  >
-                    {/* 실제 카드 내용 */}
-                    <div className="relative z-10 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div
-                          className={`bg-white backdrop-blur-sm rounded-lg p-2`}
-                        >
-                          <Building2 className="w-4 h-4 text-black" />
-                        </div>
-                        <div className="text-right">
-                          <span className="text-white/60 text-xs font-medium">
-                            {company.country}
-                          </span>
-                        </div>
+              return (
+                <div
+                  key={company.id}
+                  onClick={() => handleCompanyClick(company.id)}
+                  className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl shadow-lg transition-all duration-300 group relative overflow-hidden hover:shadow-2xl hover:scale-105 cursor-pointer
+                ${
+                  isActive
+                    ? `border-2 border-white`
+                    : `border border-slate-700/60`
+                }`}
+                >
+                  {/* 카드 내용 */}
+                  <div className="relative z-10 p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div
+                        className={`bg-white backdrop-blur-sm rounded-lg p-2`}
+                      >
+                        <Building2 className="w-4 h-4 text-black" />
                       </div>
-                      <h4 className="text-sm font-semibold text-white mb-3 truncate">
-                        {company.name}
-                      </h4>
-                      <div className="space-y-2 mb-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-white/60 text-xs">
-                            총 배출량
-                          </span>
-                          <span className={`text-white text-sm font-semibold`}>
-                            {totalEmissions} tCO2
-                          </span>
-                        </div>
-                      </div>
-                      <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
-                        {monthlyData.slice(0, 6).map((m) => (
-                          <div
-                            key={m.month}
-                            className="flex justify-between items-center text-xs"
-                          >
-                            <span className="text-white/50 font-medium">
-                              {m.month}
-                            </span>
-                            <span className="text-white/70 font-medium">
-                              {m.value}
-                            </span>
-                          </div>
-                        ))}
+                      <div className="text-right">
+                        <span className="text-white/60 text-xs font-medium">
+                          {company.country}
+                        </span>
                       </div>
                     </div>
+                    <h4 className="text-sm font-semibold text-white mb-3 truncate">
+                      {company.name}
+                    </h4>
+                    <div className="space-y-2 mb-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-white/60 text-xs">총 배출량</span>
+                        <span className="text-white text-sm font-semibold">
+                          {totalEmissions} tCO2
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
+                      {monthlyData.slice(0, 6).map((m) => (
+                        <div
+                          key={m.month}
+                          className="flex justify-between items-center text-xs"
+                        >
+                          <span className="text-white/50 font-medium">
+                            {m.month}
+                          </span>
+                          <span className="text-white/70 font-medium">
+                            {m.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                );
-              })
-            : // Skeleton
-              Array.from({ length: 5 }).map((_, idx) => (
-                <CompanyCardSkeleton key={idx} />
-              ))}
+                </div>
+              );
+            })
+          ) : isLoading ? (
+            // 로딩 중이면 스켈레톤
+            Array.from({ length: 5 }).map((_, idx) => (
+              <CompanyCardSkeleton key={idx} />
+            ))
+          ) : (
+            // 검색 결과 없음
+            <div className="text-white/60 h-[218px] flex items-center justify-center w-full">
+              검색 결과가 없습니다.
+            </div>
+          )}
         </div>
       </div>
 
@@ -180,9 +191,6 @@ const CompanySection = ({
                   {/* 내용과 버튼 */}
                   <div className="text-right">
                     <p className="text-white/80 text-sm">{post.content}</p>
-                    <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors mt-2">
-                      상세보기
-                    </button>
                   </div>
                 </div>
               ))
