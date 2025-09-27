@@ -32,8 +32,13 @@ const Dashboard = () => {
 
   // 데이터 로딩
   useEffect(() => {
-    fetchCompanies().then(setCompanies);
-    fetchPosts().then(setPosts);
+    fetchCompanies()
+      .then(setCompanies)
+      .catch((err) => console.error("Failed to load companies:", err));
+
+    fetchPosts()
+      .then(setPosts)
+      .catch((err) => console.error("Failed to load posts:", err));
   }, []);
 
   // 파싱 / 필터링 유틸

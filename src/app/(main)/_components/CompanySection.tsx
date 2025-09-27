@@ -79,29 +79,22 @@ const CompanySection = ({
             const { totalEmissions, monthlyData } =
               parseCompanyEmissions(company);
             const isActive = selectedCompanyId === company.id;
-            const colorScheme = [
-              "blue",
-              "emerald",
-              "amber",
-              "rose",
-              "indigo",
-              "teal",
-            ][idx % 6];
 
             return (
               <div
                 key={company.id}
                 onClick={() => handleCompanyClick(company.id)}
-                className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl border border-${colorScheme}-500/20 shadow-lg transition-all duration-300 group relative overflow-hidden ${
-                  isActive ? "ring-1 ring-green-400" : ""
-                } cursor-pointer`}
+                className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl shadow-lg transition-all duration-300 group relative overflow-hidden hover:shadow-2xl hover:scale-105 cursor-pointer
+                ${
+                  isActive
+                    ? `border-2 border-white`
+                    : `border border-slate-700/60`
+                }`}
               >
                 <div className="relative z-10 p-4">
                   <div className="flex items-center justify-between mb-3">
-                    <div
-                      className={`bg-${colorScheme}-500/20 backdrop-blur-sm rounded-lg p-2`}
-                    >
-                      <Building2 className="w-4 h-4 text-white/80" />
+                    <div className={`bg-white backdrop-blur-sm rounded-lg p-2`}>
+                      <Building2 className="w-4 h-4 text-black" />
                     </div>
                     <div className="text-right">
                       <span className="text-white/60 text-xs font-medium">
@@ -115,9 +108,7 @@ const CompanySection = ({
                   <div className="space-y-2 mb-3">
                     <div className="flex justify-between items-center">
                       <span className="text-white/60 text-xs">총 배출량</span>
-                      <span
-                        className={`text-${colorScheme}-300 text-sm font-semibold`}
-                      >
+                      <span className={`text-white text-sm font-semibold`}>
                         {totalEmissions} tCO2
                       </span>
                     </div>
