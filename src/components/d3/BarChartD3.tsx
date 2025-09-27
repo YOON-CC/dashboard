@@ -6,7 +6,7 @@ import { Company } from "@/lib/types";
 
 interface BarChartD3Props {
   companies: Company[];
-  selectedCompanyId?: string | null;
+  selectedCompanyId?: string | string[] | null;
   isDetailPage?: boolean;
 }
 
