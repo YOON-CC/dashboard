@@ -65,7 +65,7 @@ export default function CompanyDetailPage() {
   };
 
   // 배경 유틸
-  const [bg, setBg] = useState("");
+  const [bg, setBg] = useState("dashboard-bg1");
 
   useEffect(() => {
     const storedBg = localStorage.getItem("dashboardBg");

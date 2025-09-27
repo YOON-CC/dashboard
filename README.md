@@ -7,6 +7,8 @@
 - 포스트 데이터를 통한 기록 확인 및 다운로드
 - 선택한 자회사의 상세 정보 조회
 
+**배포 주소:** [https://dashboard-chan.vercel.app/](https://dashboard-chan.vercel.app/)
+
 </br>
 
 ## 🛠 기술 스택

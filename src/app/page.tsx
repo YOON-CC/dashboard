@@ -65,7 +65,7 @@ const Dashboard = () => {
     setSelectedCompanyId((prev) => (prev === companyId ? null : companyId));
   };
 
-  const [bg, setBg] = useState("");
+  const [bg, setBg] = useState("dashboard-bg1");
 
   useEffect(() => {
     const storedBg = localStorage.getItem("dashboardBg");
