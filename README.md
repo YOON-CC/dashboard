@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 👋 소개
 
-## Getting Started
+이 프로젝트는 **웹 기반 탄소 배출 대시보드**입니다.  
+관리자가 있는 가정 하에, 사용자는 **자사 및 자회사의 월별 탄소 배출 현황**을 확인하고 비교할 수 있습니다.
 
-First, run the development server:
+- 특정 회사의 자회사별 배출량 확인 (가솔린, 디젤, LPG 등)
+- 포스트 데이터를 통한 기록 확인 및 다운로드
+- 선택한 자회사의 상세 정보 조회
 
-```bash
+</br>
+
+## 🛠 기술 스택
+
+- **Next.js 14**
+- **Tailwind CSS 4**
+- **D3.js 7.9.0**
+- **TypeScript**
+
+</br>
+
+## ⏱ 설치 및 실행 방법
+
+```
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</br>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⏱ UI
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![alt text](image.png)
