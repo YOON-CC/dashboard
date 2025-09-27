@@ -5,6 +5,7 @@ import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react";
 import CompanySectionSkeleton from "../_ui/CompanySectionSkeleton";
 import CompanyCardSkeleton from "../_ui/CompanySectionSkeleton";
+import PostCardSkeleton from "../_ui/PostCardSkeleton";
 
 interface CompanySectionProps {
   search: string;
@@ -149,34 +150,45 @@ const CompanySection = ({
 
       {/* Posts 리스트 */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 h-[200px] overflow-y-auto p-2 mini-scrollbar">
-        {posts
-          .filter((post) =>
-            selectedCompanyId ? post.resourceUid === selectedCompanyId : true
-          )
-          .map((post) => (
-            <div
-              key={post.id}
-              className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-fit bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-white/20"
-            >
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">
-                    {post.title.charAt(0)}
-                  </span>
+        {posts && posts.length > 0
+          ? posts
+              .filter((post) =>
+                selectedCompanyId
+                  ? post.resourceUid === selectedCompanyId
+                  : true
+              )
+              .map((post) => (
+                <div
+                  key={post.id}
+                  className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-fit bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-white/20"
+                >
+                  {/* 상단 아이콘과 타이틀 */}
+                  <div className="flex items-center space-x-3 mb-2">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white font-semibold text-sm">
+                        {post.title.charAt(0)}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-white font-medium text-sm">
+                        {post.title}
+                      </p>
+                      <p className="text-white/60 text-xs">{post.dateTime}</p>
+                    </div>
+                  </div>
+
+                  {/* 내용과 버튼 */}
+                  <div className="text-right">
+                    <p className="text-white/80 text-sm">{post.content}</p>
+                    <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors mt-2">
+                      상세보기
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-medium text-sm">{post.title}</p>
-                  <p className="text-white/60 text-xs">{post.dateTime}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-white/80 text-sm">{post.content}</p>
-                <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors mt-2">
-                  상세보기
-                </button>
-              </div>
-            </div>
-          ))}
+              ))
+          : Array.from({ length: 6 }).map((_, idx) => (
+              <PostCardSkeleton key={idx} />
+            ))}
       </div>
     </div>
   );

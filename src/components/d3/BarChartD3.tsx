@@ -54,7 +54,6 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
         }))
       : [];
   } else {
-    // 전체 회사 월별 합산
     const allMonths = Array.from(
       new Set(companies.flatMap((c) => c.emissions.map((e) => e.yearMonth)))
     ).sort();
@@ -67,6 +66,29 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
         0
       ),
     }));
+  }
+
+  // 데이터 없으면 로딩 표시
+  if (!chartData || chartData.length === 0) {
+    return (
+      <div
+        ref={containerRef}
+        className={`w-full h-full flex items-center justify-center p-4 ${
+          !isDetailPage
+            ? "backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl"
+            : ""
+        }`}
+      >
+        <div className="w-full h-full flex items-center justify-center space-x-4">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="flex-1 h-32 bg-white/20 rounded-lg animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   // 스케일
@@ -163,8 +185,8 @@ const BarChartD3: React.FC<BarChartD3Props> = ({
         {/* 그라디언트 정의 */}
         <defs>
           <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2f4f4f" stopOpacity={0.8} />
-            <stop offset="100%" stopColor="##00ffaa" stopOpacity={0.4} />
+            <stop offset="0%" stopColor="#00ffaa" stopOpacity={0.8} />
+            <stop offset="100%" stopColor="#2f4f4f" stopOpacity={0.4} />
           </linearGradient>
         </defs>
       </svg>
