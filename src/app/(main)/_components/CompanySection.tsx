@@ -3,6 +3,8 @@
 
 import React, { useRef } from "react";
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react";
+import CompanySectionSkeleton from "../_ui/CompanySectionSkeleton";
+import CompanyCardSkeleton from "../_ui/CompanySectionSkeleton";
 
 interface CompanySectionProps {
   search: string;
@@ -75,63 +77,73 @@ const CompanySection = ({
         </button>
 
         <div ref={scrollRef} className="flex gap-6 pb-4 overflow-x-hidden p-2">
-          {filteredCompanies.map((company, idx) => {
-            const { totalEmissions, monthlyData } =
-              parseCompanyEmissions(company);
-            const isActive = selectedCompanyId === company.id;
+          {filteredCompanies && filteredCompanies.length > 0
+            ? filteredCompanies.map((company, idx) => {
+                const { totalEmissions, monthlyData } =
+                  parseCompanyEmissions(company);
+                const isActive = selectedCompanyId === company.id;
 
-            return (
-              <div
-                key={company.id}
-                onClick={() => handleCompanyClick(company.id)}
-                className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl shadow-lg transition-all duration-300 group relative overflow-hidden hover:shadow-2xl hover:scale-105 cursor-pointer
-                ${
-                  isActive
-                    ? `border-2 border-white`
-                    : `border border-slate-700/60`
-                }`}
-              >
-                <div className="relative z-10 p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`bg-white backdrop-blur-sm rounded-lg p-2`}>
-                      <Building2 className="w-4 h-4 text-black" />
-                    </div>
-                    <div className="text-right">
-                      <span className="text-white/60 text-xs font-medium">
-                        {company.country}
-                      </span>
-                    </div>
-                  </div>
-                  <h4 className="text-sm font-semibold text-white mb-3 truncate">
-                    {company.name}
-                  </h4>
-                  <div className="space-y-2 mb-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-white/60 text-xs">총 배출량</span>
-                      <span className={`text-white text-sm font-semibold`}>
-                        {totalEmissions} tCO2
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
-                    {monthlyData.slice(0, 6).map((m) => (
-                      <div
-                        key={m.month}
-                        className="flex justify-between items-center text-xs"
-                      >
-                        <span className="text-white/50 font-medium">
-                          {m.month}
-                        </span>
-                        <span className="text-white/70 font-medium">
-                          {m.value}
-                        </span>
+                return (
+                  <div
+                    key={company.id}
+                    onClick={() => handleCompanyClick(company.id)}
+                    className={`flex-shrink-0 w-64 bg-gradient-to-br from-slate-700/60 to-slate-800/60 backdrop-blur-xl rounded-xl shadow-lg transition-all duration-300 group relative overflow-hidden hover:shadow-2xl hover:scale-105 cursor-pointer
+                    ${
+                      isActive
+                        ? `border-2 border-white`
+                        : `border border-slate-700/60`
+                    }`}
+                  >
+                    {/* 실제 카드 내용 */}
+                    <div className="relative z-10 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div
+                          className={`bg-white backdrop-blur-sm rounded-lg p-2`}
+                        >
+                          <Building2 className="w-4 h-4 text-black" />
+                        </div>
+                        <div className="text-right">
+                          <span className="text-white/60 text-xs font-medium">
+                            {company.country}
+                          </span>
+                        </div>
                       </div>
-                    ))}
+                      <h4 className="text-sm font-semibold text-white mb-3 truncate">
+                        {company.name}
+                      </h4>
+                      <div className="space-y-2 mb-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-white/60 text-xs">
+                            총 배출량
+                          </span>
+                          <span className={`text-white text-sm font-semibold`}>
+                            {totalEmissions} tCO2
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-1 max-h-24 overflow-y-auto mini-scrollbar">
+                        {monthlyData.slice(0, 6).map((m) => (
+                          <div
+                            key={m.month}
+                            className="flex justify-between items-center text-xs"
+                          >
+                            <span className="text-white/50 font-medium">
+                              {m.month}
+                            </span>
+                            <span className="text-white/70 font-medium">
+                              {m.value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })
+            : // Skeleton
+              Array.from({ length: 5 }).map((_, idx) => (
+                <CompanyCardSkeleton key={idx} />
+              ))}
         </div>
       </div>
 
