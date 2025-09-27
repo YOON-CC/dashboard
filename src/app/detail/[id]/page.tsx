@@ -61,7 +61,7 @@ export default function CompanyDetailPage() {
       className="flex min-h-screen overflow-hidden bg-cover bg-center p-3 sm:p-6 items-center justify-center"
       style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
     >
-      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-auto overflow-x-hidden p-2 sm:p-3">
+      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-auto p-2 sm:p-3">
         <SidePanel
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
@@ -75,7 +75,7 @@ export default function CompanyDetailPage() {
           isDetailPage={company?.name}
         />
 
-        <div className="min-h-[600px] lg:h-[820px] flex flex-col lg:flex-row gap-4">
+        <div className="min-h-[600px] lg:h-[820px] flex flex-col lg:flex-row">
           {/* 왼쪽: 회사 정보 */}
           <div className="flex-1 lg:flex-none lg:w-1/2 p-3 sm:p-6 rounded-xl flex flex-col gap-4 sm:gap-6 shadow-inner">
             {/* 회사 기본 정보 */}
@@ -213,13 +213,13 @@ export default function CompanyDetailPage() {
           </div>
 
           {/* 오른쪽 차트 영역 */}
-          <div className="flex-1 lg:flex-none lg:w-1/2 grid grid-cols-1 lg:grid-cols-2 grid-rows-1 lg:grid-rows-2 gap-4 min-h-[600px] lg:h-full p-2 sm:p-4 rounded-xl">
+          <div className="flex-1 lg:flex-none lg:w-1/2 grid grid-cols-1 lg:grid-cols-2 grid-rows-1 lg:grid-rows-2 gap-4 h-auto lg:h-full p-2 sm:p-4 rounded-xl">
             {/* 파이 차트 */}
-            <div className="bg-black/30 flex flex-col items-center justify-center rounded-2xl p-4 min-h-[200px] lg:min-h-0">
-              <h3 className="text-white text-lg sm:text-xl font-bold mb-2">
+            <div className="bg-black/30 flex flex-col rounded-2xl p-4 min-h-0 overflow-hidden">
+              <h3 className="text-white text-lg sm:text-xl font-bold mb-2 flex-shrink-0 text-center">
                 배출 원천
               </h3>
-              <div className="w-full h-full flex items-center justify-center">
+              <div className="flex-1 min-h-0 w-full flex items-center justify-center">
                 <PieChart
                   data={
                     company
