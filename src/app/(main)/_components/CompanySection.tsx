@@ -144,7 +144,7 @@ const CompanySection = ({
           .map((post) => (
             <div
               key={post.id}
-              className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-[120px] bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-white/20"
+              className="flex flex-col justify-between p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors h-fit bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl border border-white/20"
             >
               <div className="flex items-center space-x-3 mb-2">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
@@ -159,7 +159,7 @@ const CompanySection = ({
               </div>
               <div className="text-right">
                 <p className="text-white/80 text-sm">{post.content}</p>
-                <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors">
+                <button className="bg-blue-500/30 hover:bg-blue-500/50 text-blue-200 px-3 py-1 rounded-full text-xs transition-colors mt-2">
                   상세보기
                 </button>
               </div>

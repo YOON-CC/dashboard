@@ -15,12 +15,13 @@ const HorizontalBarChart = ({
   otherAverage,
 }: HorizontalBarChartProps) => {
   const ref = useRef<SVGSVGElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || !containerRef.current) return;
 
-    // 크기를 더 크게 조정
-    const width = 500;
+    const containerWidth = containerRef.current.clientWidth;
+    const width = containerWidth;
     const height = 250;
     const margin = { top: 30, right: 60, bottom: 40, left: 140 };
 
@@ -61,7 +62,6 @@ const HorizontalBarChart = ({
       .attr("font-size", 14)
       .attr("font-weight", 500);
 
-    // Y축 라인 숨기기
     svg.select(".domain").remove();
 
     // X축
@@ -73,7 +73,6 @@ const HorizontalBarChart = ({
       .attr("fill", "white")
       .attr("font-size", 12);
 
-    // X축 라벨
     svg
       .append("text")
       .attr("x", width / 2)
@@ -84,7 +83,6 @@ const HorizontalBarChart = ({
       .attr("opacity", 0.7)
       .text("tCO2");
 
-    // 막대 그래프 (둥근 모서리와 그래디언트 효과)
     const bars = svg
       .selectAll(".bar")
       .data(data)
@@ -99,7 +97,6 @@ const HorizontalBarChart = ({
       .attr("ry", 4)
       .attr("opacity", 0.8);
 
-    // 호버 효과
     bars
       .on("mouseover", function (event, d) {
         d3.select(this)
@@ -116,14 +113,12 @@ const HorizontalBarChart = ({
           .attr("transform", "scale(1)");
       });
 
-    // 값 라벨 (더 큰 폰트와 배경)
     const labels = svg
       .selectAll(".label")
       .data(data)
       .join("g")
       .attr("class", "label");
 
-    // 라벨 배경
     labels
       .append("rect")
       .attr("x", (d) => x(d.value) + 8)
@@ -133,7 +128,6 @@ const HorizontalBarChart = ({
       .attr("fill", "rgba(0,0,0,0.5)")
       .attr("rx", 4);
 
-    // 라벨 텍스트
     labels
       .append("text")
       .attr("x", (d) => x(d.value) + 15)
@@ -145,7 +139,11 @@ const HorizontalBarChart = ({
       .text((d) => d.value);
   }, [prevMonth, lastMonth, sameCompanyAverage, otherAverage]);
 
-  return <svg ref={ref} className="drop-shadow-lg"></svg>;
+  return (
+    <div ref={containerRef} className="w-full overflow-x-auto custom-scrollbar">
+      <svg ref={ref} className="drop-shadow-lg min-w-[500px]"></svg>
+    </div>
+  );
 };
 
 export default HorizontalBarChart;
