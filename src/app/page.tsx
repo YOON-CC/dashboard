@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Building2, TrendingUp } from "lucide-react";
-import { Company, fetchCompanies, fetchPosts, Post } from "@/lib/api";
-import LineChartD3 from "./(main)/_components/BarChartD3";
+import { fetchCompanies, fetchPosts } from "@/lib/api";
+import BarChartD3 from "../components/d3/BarChartD3";
 import { useRouter } from "next/navigation";
-import HorizontalBarChart from "./(main)/_components/HorizontalBarChart";
+import HorizontalBarChart from "../components/d3/HorizontalBarChart";
 import Header from "@/components/layout/Header";
 import SidePanel from "@/components/layout/SidePanel";
 import GlobalOverview from "./(main)/_components/GlobalOverview";
@@ -13,6 +13,7 @@ import HeadlineNews from "./(main)/_ui/HeadlineNews";
 import CompanySection from "./(main)/_components/CompanySection";
 import { calculateCompanyStatistics } from "./(main)/utils/statistics";
 import CompanyStatsBar from "./(main)/_ui/CompanyStatsBar";
+import { Company, Post } from "@/lib/types";
 
 const Dashboard = () => {
   const router = useRouter();
@@ -112,7 +113,7 @@ const Dashboard = () => {
                   월별 배출량
                 </h3>
                 <div className="h-64">
-                  <LineChartD3
+                  <BarChartD3
                     companies={companies}
                     selectedCompanyId={selectedCompanyId}
                   />

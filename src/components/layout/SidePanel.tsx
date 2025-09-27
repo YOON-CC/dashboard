@@ -1,13 +1,9 @@
 "use client";
 
+import { Company } from "@/lib/types";
 import { Leaf, X, Menu, Globe, Building2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-interface Company {
-  id: string;
-  name: string;
-}
 
 interface SidePanelProps {
   isDrawerOpen: boolean;

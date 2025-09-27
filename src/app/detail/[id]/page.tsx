@@ -2,17 +2,16 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Company, fetchCompanies, fetchPosts, Post } from "@/lib/api";
+import { fetchCompanies, fetchPosts } from "@/lib/api";
 import SidePanel from "@/components/layout/SidePanel";
 import Header from "@/components/layout/Header";
 import * as d3 from "d3";
 import PieChart from "./components/PieChart";
-import { Globe } from "lucide-react";
-import LineChartD3 from "@/app/(main)/_components/BarChartD3";
-import BarChartD3 from "@/app/(main)/_components/BarChartD3";
-import HorizontalBarChart from "@/app/(main)/_components/HorizontalBarChart";
+import BarChartD3 from "@/components/d3/BarChartD3";
+import HorizontalBarChart from "@/components/d3/HorizontalBarChart";
 import CompanyStatsBar from "@/app/(main)/_ui/CompanyStatsBar";
 import { calculateCompanyStatistics } from "@/app/(main)/utils/statistics";
+import { Company, Post } from "@/lib/types";
 export default function CompanyDetailPage() {
   const params = useParams();
   const companyId = params.id;

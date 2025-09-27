@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { Company } from "@/lib/api";
+import { Company } from "@/lib/types";
 
 interface BarChartD3Props {
   companies: Company[];
