@@ -61,7 +61,7 @@ export default function CompanyDetailPage() {
       className="flex min-h-screen overflow-hidden bg-cover bg-center p-3 sm:p-6 items-center justify-center"
       style={{ backgroundImage: "url('/images/dashboard-bg.jpg')" }}
     >
-      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-auto p-2 sm:p-3">
+      <div className="h-full w-full min-w-0 rounded-3xl backdrop-blur-[12px] bg-black/10 border border-white/20 shadow-2xl overflow-hidden p-2 sm:p-3">
         <SidePanel
           isDrawerOpen={isDrawerOpen}
           setIsDrawerOpen={setIsDrawerOpen}
